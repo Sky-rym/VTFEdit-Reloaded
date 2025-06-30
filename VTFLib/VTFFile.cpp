@@ -3080,7 +3080,6 @@ static SVTFImageConvertInfo VTFImageConvertInfo[] =
 	{ 	 24,  3,  8,  8,  8,  8,	 2,	 1,	 0,	-1, vlFalse,  vlTrue,	ToBlueScreen,	FromBlueScreen,	IMAGE_FORMAT_BGR888_BLUESCREEN},
 	{ 	 32,  4,  8,  8,  8,  8,	 3,	 0,	 1,	 2, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ARGB8888},
 	{ 	 32,  4,  8,  8,  8,  8,	 2,	 1,	 0,	 3, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_BGRA8888},
-	{ 	 32,  4,  8,  8,  8,  8,	 2,	 1,	 0,	 3, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_HDR_BGRA8888},
 	{ 	  4,  0,  0,  0,  0,  0,	-1,	-1,	-1,	-1,  vlTrue,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_DXT1},
 	{ 	  8,  0,  0,  0,  0,  8,	-1,	-1,	-1,	-1,  vlTrue,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_DXT3},
 	{ 	  8,  0,  0,  0,  0,  8,	-1,	-1,	-1,	-1,  vlTrue,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_DXT5},
@@ -3106,8 +3105,8 @@ static SVTFImageConvertInfo VTFImageConvertInfo[] =
 	{	 24,  3, 24,  0,  0,  0,	 0,	-1,	-1,	-1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ATI_DST24},
 	{	 32,  4,  0,  0,  0,  0,	-1,	-1,	-1,	-1, vlFalse, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_NV_NULL},
 	{	  4,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_ATI1N},
-	{ 	 32,  4,  8,  8,  8,  8,	 2,	 1,	 0,	 3, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_HDR_BGRA8888},
-	{     8,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_ATI2N},/*
+	{     8,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_ATI2N},
+	{ 	 32,  4,  8,  8,  8,  8,	 2,	 1,	 0,	 3, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_HDR_BGRA8888},/*
 	{	 16,  2, 16,  0,  0,  0,	 0, -1, -1, -1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_X360_DST16},
 	{	 24,  3, 24,  0,  0,  0,	 0, -1, -1, -1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_X360_DST24},
 	{	 24,  3,  0,  0,  0,  0,	-1, -1, -1, -1, vlFalse, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_X360_DST24F},
