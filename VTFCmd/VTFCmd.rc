@@ -7,7 +7,9 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+//#include ".\afxres.h" Commenting this out because apparently this was replaced to be 'winres' and 'winver', but keeping this here just in case.
+#include "winres.h"
+#include "winver.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS

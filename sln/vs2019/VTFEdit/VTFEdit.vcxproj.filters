@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\..\VTFEdit\VTFOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\VTFEdit\WADConvert.cpp">
+    <ClCompile Include="..\..\..\VTFEdit\VTFResources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,7 +68,7 @@
     <ClInclude Include="..\..\..\VTFEdit\VTFOptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\VTFEdit\WADConvert.h">
+    <ClInclude Include="..\..\..\VTFEdit\VTFResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -49,12 +49,13 @@
 #	endif
 #endif
 
-#include "..\lib\HLLib.h"
-#ifdef _WIN64
-#	pragma comment(lib, "..\\..\\..\\lib\\x64\\HLLib.lib")
-#else
-#	pragma comment(lib, "..\\..\\..\\lib\\x86\\HLLib.lib")
-#endif
+ // Re-enable if Wad conversion is fixed as HLLib is only used for that purpose in this program.
+ //#include "..\lib\HLLib.h"
+//#ifdef _WIN64
+//#	pragma comment(lib, "..\\..\\..\\lib\\x64\\HLLib.lib")
+//#else
+//#	pragma comment(lib, "..\\..\\..\\lib\\x86\\HLLib.lib")
+//#endif
 
 #include "IL\il.h"
 #pragma comment(lib, "DevIL.lib")

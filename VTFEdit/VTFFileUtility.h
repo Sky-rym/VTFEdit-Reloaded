@@ -46,7 +46,7 @@ namespace VTFEdit
 				catch(Exception ^)
 				{
 					VTFCreateOptions.uiVersion[0] = VTF_MAJOR_VERSION;
-					VTFCreateOptions.uiVersion[1] = VTF_MINOR_VERSION;
+					VTFCreateOptions.uiVersion[1] = 4; // Defaulting to 4 instead of 5 because of how common people use this for older branch games.
 				}
 			}
 			VTFCreateOptions.ImageFormat = Options->NormalFormat;
@@ -64,13 +64,20 @@ namespace VTFEdit
 			VTFCreateOptions.bReflectivity = Options->ComputeReflectivity;
 			VTFCreateOptions.bSphereMap = Options->GenerateSphereMap;
 			VTFCreateOptions.bSRGB = Options->sRGB;
+			VTFCreateOptions.nAlphaThreshold = Options->AlphaThreshold;
 
 			vlSetFloat(VTFLIB_LUMINANCE_WEIGHT_R, Options->LuminanceWeightR);
 			vlSetFloat(VTFLIB_LUMINANCE_WEIGHT_G, Options->LuminanceWeightG);
 			vlSetFloat(VTFLIB_LUMINANCE_WEIGHT_B, Options->LuminanceWeightB);
 
-			if (Options->sRGB)
-				VTFCreateOptions.uiFlags |= TEXTUREFLAGS_SRGB;
+			/*
+			*	The bit of code below is commented out because it is invalid and the wrong thing to do on multiple fronts,
+			*	Some of why this is wrong/invalid stem from issues with VTFEdit/VTFLib's internal design and or problematic decisions from Valve with later branches/versions of Source depending on how you look at it,
+			*	Either way this should never be turned back on unless VTFEdit/VTFLib's handling of different VTF versions gets a major overhaul but even then I doubt this marker flag is that useful or even valid for what it's being used for here.
+			*/
+
+			/*if (Options->sRGB)
+				VTFCreateOptions.uiFlags |= TEXTUREFLAGS_SRGB;*/
 
 			return VTFCreateOptions;
 		}
@@ -87,6 +94,10 @@ namespace VTFEdit
 				LODControlResource.ResolutionClampV = Options->LODControlClampV;
 
 				bResult &= pVTFFile->SetResourceData(VTF_RSRC_TEXTURE_LOD_SETTINGS, sizeof(SVTFTextureLODControlResource), &LODControlResource) != vlFalse;
+			}
+			else {
+				// If it doesn't have this resource checked, make sure it's wiped from the already existing resources or not created at all.
+				pVTFFile->SetResourceData(VTF_RSRC_TEXTURE_LOD_SETTINGS, 0, 0);
 			}
 
 			if(Options->CreateInformationResource)
@@ -127,13 +138,17 @@ namespace VTFEdit
 				}
 
 				vlUInt uiSize = 0;
-				vlByte lpBuffer[65536];
+				vlByte lpBuffer[65536]{};
 				if(pVMTFile->Save(lpBuffer, sizeof(lpBuffer), uiSize))
 				{
 					bResult &= pVTFFile->SetResourceData(VTF_RSRC_KEY_VALUE_DATA, uiSize, lpBuffer) != vlFalse;
 				}
 
 				delete pVMTFile;
+			}
+			else {
+				// If it doesn't have this resource checked, make sure it's wiped from the already existing resources or not created at all.
+				pVTFFile->SetResourceData(VTF_RSRC_KEY_VALUE_DATA, 0, 0);
 			}
 
 			return bResult;

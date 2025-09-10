@@ -201,6 +201,7 @@ typedef enum tagVTFResizeMethod
     RESIZE_NEAREST_POWER2 = 0,
     RESIZE_BIGGEST_POWER2,
     RESIZE_SMALLEST_POWER2,
+	RESIZE_NEAREST_MULTIPLE4,
     RESIZE_SET,
 	RESIZE_COUNT
 } VTFResizeMethod;
@@ -289,6 +290,8 @@ typedef struct tagSVTFCreateOptions
 
 	vlBool bSphereMap;									//!< Generate a sphere map for six faced environment maps.
 	vlBool bSRGB;										//!< Texture is in the SRGB color space.
+
+	vlUInt nAlphaThreshold;								//!< Alpha threshold for One Bit Alpha. Pixel alpha below this value is set to 0.
 } SVTFCreateOptions;
 
 typedef struct tagSVTFTextureLODControlResource
@@ -416,6 +419,7 @@ VTFLIB_API vlUInt vlImageGetHasImage();
 
 VTFLIB_API vlUInt vlImageGetMajorVersion();
 VTFLIB_API vlUInt vlImageGetMinorVersion();
+VTFLIB_API vlUInt vlImageSetMinorVersion();
 VTFLIB_API vlUInt vlImageGetSize();
 
 VTFLIB_API vlUInt vlImageGetWidth();
@@ -776,6 +780,8 @@ namespace VTFLib
 	private:
 		vlBool IsPowerOfTwo(vlUInt uiSize);
 		vlUInt NextPowerOfTwo(vlUInt uiSize);
+		vlBool IsMultipleOfFour(vlUInt uiSize);
+		vlUInt NearestMultipleOfFour(vlUInt uiSize);
 
 		vlVoid ComputeResources();
 
@@ -787,6 +793,7 @@ namespace VTFLib
 
 		vlUInt GetMajorVersion() const;
 		vlUInt GetMinorVersion() const;
+		vlVoid SetMinorVersion(vlUInt version);
 		vlUInt GetSize() const;
 
 		vlUInt GetWidth() const;
@@ -864,8 +871,8 @@ namespace VTFLib
 
 	public:
 		static vlBool ConvertToRGBA8888(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat);
-		static vlBool ConvertFromRGBA8888(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat);
-		static vlBool Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat, VTFImageFormat DestFormat);
+		static vlBool ConvertFromRGBA8888(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat, vlUInt nAlphaThreshold = 0);
+		static vlBool Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat, VTFImageFormat DestFormat, vlUInt nAlphaThreshold = 0);
 
 		static vlBool Resize(vlByte *lpSourceRGBA8888, vlByte *lpDestRGBA8888, vlUInt uiSourceWidth, vlUInt uiSourceHeight, vlUInt uiDestWidth, vlUInt uiDestHeight, VTFMipmapFilter ResizeFilter, vlBool bSRGB);
 
@@ -874,7 +881,7 @@ namespace VTFLib
 		static vlBool DecompressDXT3(vlByte *src, vlByte *dst, vlUInt uiWidth, vlUInt uiHeight);
 		static vlBool DecompressDXT5(vlByte *src, vlByte *dst, vlUInt uiWidth, vlUInt uiHeight);
 
-		static vlBool CompressDXTn(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat);
+		static vlBool CompressDXTn(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat, vlUInt nAlphaThreshold = 0);
 
 	public:
 		static vlVoid CorrectImageGamma(vlByte *lpImageDataRGBA8888, vlUInt uiWidth, vlUInt uiHeight, vlSingle sGammaCorrection);

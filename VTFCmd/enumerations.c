@@ -298,6 +298,10 @@ VTFResizeMethod StringToResizeMethod(const vlChar *cString)
 	{
 		return RESIZE_SMALLEST_POWER2;
 	}
+	else if (stricmp(cString, "MULTIPLE") == 0)
+	{
+		return RESIZE_NEAREST_MULTIPLE4;
+	}
 	else
 	{
 		return RESIZE_COUNT;

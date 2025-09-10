@@ -21,8 +21,11 @@
 
 #include "stdafx.h"
 #include "VTFOptions.h"
+#include "VMTCreate.h"
 #include "VMTFileUtility.h"
 #include "VTFFileUtility.h"
+#include <string>
+#include <msclr\marshal_cppstd.h>
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -37,11 +40,17 @@ namespace VTFEdit
 	{
 	private:
 		CVTFOptions ^ Options;
+		CVMTCreate ^ VMTOptions;
+
+		System::String^ revertShaderText;
+
+		   System::String^ revertBaseText;
 
 	public: 
-		CBatchConvert(CVTFOptions ^Options)
+		CBatchConvert(CVTFOptions ^Options, CVMTCreate ^VMTOptions)
 		{
 			this->Options = Options;
+			this->VMTOptions = VMTOptions;
 
 			this->InitializeComponent();
 		}
@@ -49,6 +58,7 @@ namespace VTFEdit
 	private: System::Windows::Forms::Button ^  btnOptions;
 	private: System::Windows::Forms::GroupBox ^  grpProgress;
 	private: System::Windows::Forms::ProgressBar ^  barProgress;
+	private: System::Windows::Forms::Label^ lblProgress;
 	private: System::Windows::Forms::Button ^  btnClose;
 	private: System::Windows::Forms::Button ^  btnConvert;
 	private: System::Windows::Forms::GroupBox ^  grpOptions;
@@ -69,7 +79,8 @@ namespace VTFEdit
 	private: System::Windows::Forms::ComboBox ^  cboFromVTFFormat;
 	private: System::Windows::Forms::RadioButton ^  radFromVTF;
 	private: System::Windows::Forms::TextBox ^  txtFromVTFFilter;
-	private: System::ComponentModel::IContainer ^  components;
+	private: System::Windows::Forms::Button^ btnVMTOptions;
+	private: System::ComponentModel::IContainer^ components;
 
 	private:
 		/// <summary>
@@ -87,6 +98,7 @@ namespace VTFEdit
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(CBatchConvert::typeid));
 			this->btnOptions = (gcnew System::Windows::Forms::Button());
 			this->grpProgress = (gcnew System::Windows::Forms::GroupBox());
+			this->lblProgress = (gcnew System::Windows::Forms::Label());
 			this->barProgress = (gcnew System::Windows::Forms::ProgressBar());
 			this->btnClose = (gcnew System::Windows::Forms::Button());
 			this->btnConvert = (gcnew System::Windows::Forms::Button());
@@ -108,6 +120,7 @@ namespace VTFEdit
 			this->txtLog = (gcnew System::Windows::Forms::RichTextBox());
 			this->dlgOpenFolder = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->tipMain = (gcnew System::Windows::Forms::ToolTip(this->components));
+			this->btnVMTOptions = (gcnew System::Windows::Forms::Button());
 			this->grpProgress->SuspendLayout();
 			this->grpOptions->SuspendLayout();
 			this->grpLog->SuspendLayout();
@@ -119,15 +132,16 @@ namespace VTFEdit
 			this->btnOptions->FlatStyle = System::Windows::Forms::FlatStyle::System;
 			this->btnOptions->Location = System::Drawing::Point(6, 334);
 			this->btnOptions->Name = L"btnOptions";
-			this->btnOptions->Size = System::Drawing::Size(60, 22);
+			this->btnOptions->Size = System::Drawing::Size(72, 22);
 			this->btnOptions->TabIndex = 5;
-			this->btnOptions->Text = L"&Options";
+			this->btnOptions->Text = L"VT&F Options";
 			this->btnOptions->Click += gcnew System::EventHandler(this, &CBatchConvert::btnOptions_Click);
 			// 
 			// grpProgress
 			// 
 			this->grpProgress->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
+			this->grpProgress->Controls->Add(this->lblProgress);
 			this->grpProgress->Controls->Add(this->barProgress);
 			this->grpProgress->FlatStyle = System::Windows::Forms::FlatStyle::System;
 			this->grpProgress->Location = System::Drawing::Point(6, 127);
@@ -137,13 +151,24 @@ namespace VTFEdit
 			this->grpProgress->TabStop = false;
 			this->grpProgress->Text = L"Progress:";
 			// 
+			// lblProgress
+			// 
+			this->lblProgress->Anchor = System::Windows::Forms::AnchorStyles::Right;
+			this->lblProgress->BackColor = System::Drawing::Color::Transparent;
+			this->lblProgress->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->lblProgress->Location = System::Drawing::Point(312, 15);
+			this->lblProgress->Name = L"lblProgress";
+			this->lblProgress->Size = System::Drawing::Size(55, 21);
+			this->lblProgress->TabIndex = 1;
+			this->lblProgress->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			// 
 			// barProgress
 			// 
 			this->barProgress->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->barProgress->Location = System::Drawing::Point(6, 16);
 			this->barProgress->Name = L"barProgress";
-			this->barProgress->Size = System::Drawing::Size(360, 19);
+			this->barProgress->Size = System::Drawing::Size(300, 19);
 			this->barProgress->TabIndex = 0;
 			// 
 			// btnClose
@@ -204,7 +229,6 @@ namespace VTFEdit
 			this->cboFromVTFFormat->Name = L"cboFromVTFFormat";
 			this->cboFromVTFFormat->Size = System::Drawing::Size(59, 21);
 			this->cboFromVTFFormat->TabIndex = 9;
-			this->cboFromVTFFormat->SelectedIndexChanged += gcnew System::EventHandler(this, &CBatchConvert::cboFromVTFFormat_SelectedIndexChanged);
 			// 
 			// radFromVTF
 			// 
@@ -226,7 +250,6 @@ namespace VTFEdit
 			this->txtFromVTFFilter->TabIndex = 10;
 			this->txtFromVTFFilter->Text = L"*.vtf";
 			this->tipMain->SetToolTip(this->txtFromVTFFilter, L"Wildcard filter.  Examples include *.* or *.vtf.");
-			this->txtFromVTFFilter->TextChanged += gcnew System::EventHandler(this, &CBatchConvert::txtFromVTFFilter_TextChanged);
 			// 
 			// radToVTF
 			// 
@@ -249,7 +272,6 @@ namespace VTFEdit
 			this->txtToVTFFilter->TabIndex = 7;
 			this->txtToVTFFilter->Text = L"*.tga";
 			this->tipMain->SetToolTip(this->txtToVTFFilter, L"Wildcard filter.  Examples include *.* or *.tga or *.bmp;*.tga.");
-			this->txtToVTFFilter->TextChanged += gcnew System::EventHandler(this, &CBatchConvert::txtToVTFFilter_TextChanged);
 			// 
 			// chkRecursive
 			// 
@@ -288,6 +310,7 @@ namespace VTFEdit
 			// 
 			// txtOutputFolder
 			// 
+			this->txtOutputFolder->AllowDrop = true;
 			this->txtOutputFolder->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->txtOutputFolder->Location = System::Drawing::Point(106, 31);
@@ -295,7 +318,6 @@ namespace VTFEdit
 			this->txtOutputFolder->Size = System::Drawing::Size(236, 20);
 			this->txtOutputFolder->TabIndex = 4;
 			this->tipMain->SetToolTip(this->txtOutputFolder, L"Destination image folder.");
-			this->txtOutputFolder->TextChanged += gcnew System::EventHandler(this, &CBatchConvert::txtOutputFolder_TextChanged);
 			// 
 			// lblOutputFolder
 			// 
@@ -319,6 +341,7 @@ namespace VTFEdit
 			// 
 			// txtInputFolder
 			// 
+			this->txtInputFolder->AllowDrop = true;
 			this->txtInputFolder->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->txtInputFolder->Location = System::Drawing::Point(106, 12);
@@ -370,9 +393,21 @@ namespace VTFEdit
 			// 
 			// tipMain
 			// 
-			this->tipMain->AutoPopDelay = 10000;
+			this->tipMain->AutoPopDelay = 20000;
 			this->tipMain->InitialDelay = 500;
 			this->tipMain->ReshowDelay = 100;
+			this->tipMain->ShowAlways = true;
+			// 
+			// btnVMTOptions
+			// 
+			this->btnVMTOptions->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+			this->btnVMTOptions->Location = System::Drawing::Point(84, 334);
+			this->btnVMTOptions->Name = L"btnVMTOptions";
+			this->btnVMTOptions->Size = System::Drawing::Size(80, 22);
+			this->btnVMTOptions->TabIndex = 6;
+			this->btnVMTOptions->Text = L"VM&T Options";
+			this->btnVMTOptions->UseVisualStyleBackColor = true;
+			this->btnVMTOptions->Click += gcnew System::EventHandler(this, &CBatchConvert::btnVMTOptions_Click);
 			// 
 			// CBatchConvert
 			// 
@@ -380,6 +415,7 @@ namespace VTFEdit
 			this->AutoScaleBaseSize = System::Drawing::Size(5, 13);
 			this->CancelButton = this->btnClose;
 			this->ClientSize = System::Drawing::Size(384, 361);
+			this->Controls->Add(this->btnVMTOptions);
 			this->Controls->Add(this->btnOptions);
 			this->Controls->Add(this->grpProgress);
 			this->Controls->Add(this->btnClose);
@@ -609,6 +645,7 @@ namespace VTFEdit
 				for(int j = 0; j < Files->Length; j++)
 				{
 					bool bIsVTF = String::Compare(Files[j]->Extension, ".vtf", true) == 0;
+					bool bHasAlpha = false;
 
 					this->Log(String::Concat("Processing ", Files[j]->Name, "..."), System::Drawing::Color::Gray);
 
@@ -623,14 +660,47 @@ namespace VTFEdit
 						// Load the image and convert it to RGBA.
 						if(ilLoadImage(cFile))
 						{
-							bool bHasAlpha = ilGetInteger(IL_IMAGE_FORMAT) == IL_RGBA || ilGetInteger(IL_IMAGE_FORMAT) == IL_BGRA || ilGetInteger(IL_IMAGE_FORMAT) == IL_LUMINANCE_ALPHA;
-
 							if(ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 							{
+								vlUInt uiWidth = (vlUInt)ilGetInteger(IL_IMAGE_WIDTH);
+								vlUInt uiHeight = (vlUInt)ilGetInteger(IL_IMAGE_HEIGHT);
+								vlUInt val = uiWidth * uiHeight * 4;
+								// Copy the image data.
+								vlByte *lpImageData = new vlByte[val];
+								memcpy(lpImageData, ilGetData(), val);
+
+								// Only check for alpha when bHasAlpha is false. This is to allow for checking through multiple images for transparency
+								// and to not unnecessarily check for alpha when it was already detected, which would be pointless.
+								if ( !bHasAlpha ) {
+									DWORD uiStride = (uiWidth + 3) / 4 * 4;
+									System::Drawing::Bitmap^ vtfImage = gcnew System::Drawing::Bitmap(uiWidth, uiHeight, uiStride * 3,	System::Drawing::Imaging::PixelFormat::Format32bppArgb, (System::IntPtr)lpImageData);
+
+									// Iterate all pixels in the image and check if any of them are lower than 255 ( is not fully opaque )
+									for ( vlUInt j = 0; j < uiWidth; j++ ) {
+										for ( vlUInt k = 0; k < uiHeight; k++ ) {
+											if ( vtfImage->GetPixel( j, k ).A < 255 ) {
+												bHasAlpha = true;
+												break;
+											}
+										}
+									}
+								}
+								
 								VTFCreateOptions.ImageFormat = bHasAlpha ? Options->AlphaFormat : Options->NormalFormat;
 
-								if(VTFFile.Create((vlUInt)ilGetInteger(IL_IMAGE_WIDTH), (vlUInt)ilGetInteger(IL_IMAGE_HEIGHT), ilGetData(), VTFCreateOptions) != vlFalse && CVTFFileUtility::CreateResources(Options, &VTFFile))
+								if(VTFFile.Create(uiWidth, uiHeight, lpImageData, VTFCreateOptions) != vlFalse)
 								{
+									if (VTFFile.GetMinorVersion() >= 3)
+									{
+										if (Options->chkCreateLODControlResource->Checked || Options->chkCreateInformationResource->Checked)
+										{
+											if (CVTFFileUtility::CreateResources(Options, &VTFFile) == vlFalse)
+											{
+												this->Log(String::Concat("Error creating resources for ", Files[j]->Name, ".", (gcnew String(vlGetLastError()))->Replace("\n", " ")), System::Drawing::Color::Red);
+											}
+										}
+									}
+
 									if(!System::IO::Directory::Exists(sOutputFolder))
 									{
 										try
@@ -643,13 +713,123 @@ namespace VTFEdit
 										}
 									}
 
+									// Set flags for each VTF file created.
+									for (vlUInt i = 0, j = 0x00000001; i < (vlUInt)this->Options->lstFlags->Items->Count; i++, j <<= 1)
+									{
+										if (this->Options->lstFlags->GetItemChecked(i))
+										{
+											// The flags list only includes flags that can be changed by the user.
+											switch (i)
+											{
+											case 0: VTFFile.SetFlag(TEXTUREFLAGS_POINTSAMPLE, true); break;
+											case 1: VTFFile.SetFlag(TEXTUREFLAGS_TRILINEAR, true); break;
+											case 2: VTFFile.SetFlag(TEXTUREFLAGS_CLAMPS, true); break;
+											case 3: VTFFile.SetFlag(TEXTUREFLAGS_CLAMPT, true); break;
+											case 4: VTFFile.SetFlag(TEXTUREFLAGS_ANISOTROPIC, true); break;
+											case 5: VTFFile.SetFlag(TEXTUREFLAGS_HINT_DXT5, true); break;
+											case 6: VTFFile.SetFlag(TEXTUREFLAGS_SRGB, true); break;
+											case 7: VTFFile.SetFlag(TEXTUREFLAGS_NORMAL, true); break;
+											case 8: VTFFile.SetFlag(TEXTUREFLAGS_NOMIP, true); break;
+											case 9: VTFFile.SetFlag(TEXTUREFLAGS_NOLOD, true); break;
+											case 10: VTFFile.SetFlag(TEXTUREFLAGS_MINMIP, true); break;
+											case 11: VTFFile.SetFlag(TEXTUREFLAGS_PROCEDURAL, true); break;
+											case 12: VTFFile.SetFlag(TEXTUREFLAGS_ENVMAP, true); break;
+											case 13: VTFFile.SetFlag(TEXTUREFLAGS_RENDERTARGET, true); break;
+											case 14: VTFFile.SetFlag(TEXTUREFLAGS_DEPTHRENDERTARGET, true); break;
+											case 15: VTFFile.SetFlag(TEXTUREFLAGS_NODEBUGOVERRIDE, true); break;
+											case 16: VTFFile.SetFlag(TEXTUREFLAGS_NODEPTHBUFFER, true); break;
+											case 17: VTFFile.SetFlag(TEXTUREFLAGS_CLAMPU, true); break;
+											case 18: VTFFile.SetFlag(TEXTUREFLAGS_VERTEXTEXTURE, true); break;
+											case 19: VTFFile.SetFlag(TEXTUREFLAGS_SSBUMP, true); break;
+											case 20: VTFFile.SetFlag(TEXTUREFLAGS_BORDER, true); break;
+											default:
+												break;
+											}
+										}
+									}
+
 									char *cVTFFile = (char *)(System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(sVTFFile)).ToPointer();
 									if(VTFFile.Save(cVTFFile))
 									{
-										this->Log(String::Concat("Wrote ", sVTFFile, "."), System::Drawing::Color::Green);
-										if(this->chkCreateVMTFiles->Checked && CVMTFileUtility::CreateDefaultMaterial(sVTFFile, "LightmappedGeneric", bHasAlpha))
+										//this->Log(String::Concat("Wrote ", sVTFFile, "."), System::Drawing::Color::Green);
+										if(this->chkCreateVMTFiles->Checked)
 										{
-											this->Log(String::Concat("Wrote ", sVMTFile, "."), System::Drawing::Color::Green);
+											char* cTemp;
+											VTFLib::CVMTFile VMTFile;
+
+											cTemp = (char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->VMTOptions->cboShader->Text).ToPointer();
+											VMTFile.Create(cTemp);
+											System::Runtime::InteropServices::Marshal::FreeHGlobal((IntPtr)cTemp);
+
+											// Check if the target location contains \materials\ in the path. Assuming they are going to a game folder.
+											if (sVTFFile->Contains("\\materials\\"))
+											{
+												// Convert to standard string for iteration.
+												std::string vtfDest = msclr::interop::marshal_as<std::string>(sVTFFile);
+												System::String^ findMaterials = "";
+												System::String^ baseTexPrefix = "";
+												bool found = false;
+												for (wchar_t i : vtfDest)
+												{
+													if (!found)
+													{
+														if (findMaterials->Contains("\\materials\\"))
+														{
+															found = true;
+															baseTexPrefix = baseTexPrefix + i;
+														}
+														else {
+															findMaterials = findMaterials + i;
+														}
+													}
+													else {
+														baseTexPrefix = baseTexPrefix + i;
+													}
+												}
+												std::string vtfSuffix = msclr::interop::marshal_as<std::string>(baseTexPrefix);
+												int period = vtfSuffix.find_last_of('.');
+												baseTexPrefix = baseTexPrefix->Remove(period); // Remove '.vtf' extension from basetexture as it's not needed.
+												this->VMTOptions->AddVMTStringNode(VMTFile, "$basetexture", baseTexPrefix);
+											}
+											else
+												this->VMTOptions->AddVMTStringNode(VMTFile, "$basetexture", sVTFName);
+
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$bumpmap", this->VMTOptions->txtBumpTexture1->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$basetexture2", this->VMTOptions->txtBaseTexture2->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$bumpmap2", this->VMTOptions->txtBumpTexture2->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$envmap", this->VMTOptions->txtEnviromentTexture->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$envmapmask", this->VMTOptions->txtEnviromentMaskTexture->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$detail", this->VMTOptions->txtDetailTexture->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "%tooltexture", this->VMTOptions->txtToolTexture->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$normalmap", this->VMTOptions->txtNormalTexture->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$dudvmap", this->VMTOptions->txtDuDvTexture->Text);
+
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$surfaceprop", this->VMTOptions->cboSurface1->Text);
+											this->VMTOptions->AddVMTStringNode(VMTFile, "$surfaceprop2", this->VMTOptions->cboSurface2->Text);
+
+											this->VMTOptions->AddVMTStringNode(VMTFile, "%keywords", this->VMTOptions->txtKeywords->Text);
+
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$additive", this->VMTOptions->chkAdditive->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$alphatest", this->VMTOptions->chkAlphaTest->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$nocull", this->VMTOptions->chkNoCull->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$nodecal", this->VMTOptions->chkNoDecal->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$nolod", this->VMTOptions->chkNoLOD->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$translucent", this->VMTOptions->chkTranslucent->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$vertexalpha", this->VMTOptions->chkVertexAlpha->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$vertexcolor", this->VMTOptions->chkVertexColor->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$model", this->VMTOptions->chkModel->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$decal", this->VMTOptions->chkDecal->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$nofog", this->VMTOptions->chkNoFog->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$ignorez", this->VMTOptions->chkIgnoreZ->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$halflambert", this->VMTOptions->chkHalfLambert->Checked, false);
+											this->VMTOptions->AddVMTBooleanNode(VMTFile, "$allowalphatocoverage", this->VMTOptions->chkAlphaCoverage->Checked, false);
+
+											cTemp = (char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(sVMTFile).ToPointer();
+
+											if(VMTFile.Save(cTemp))
+												this->Log(String::Concat("Wrote ", sVMTFile, "."), System::Drawing::Color::Green);
+											System::Runtime::InteropServices::Marshal::FreeHGlobal((IntPtr)cTemp);
+
 										}
 									}
 									else
@@ -662,6 +842,7 @@ namespace VTFEdit
 								{
 									this->Log(String::Concat("Error creating ", Files[j]->Name, ".", (gcnew String(vlGetLastError()))->Replace("\n", " ")), System::Drawing::Color::Red);
 								}
+								
 							}
 							else
 							{
@@ -747,9 +928,14 @@ namespace VTFEdit
 					}
 
 					this->barProgress->Value++;
+					this->lblProgress->Text = String::Concat("% ", ((this->barProgress->Value / this->barProgress->Maximum) * 100).ToString("000.00"));
 					this->barProgress->Refresh();
 				}
 			}
+
+			// Revert the text for shader and basetexture to what they previously were.
+			this->VMTOptions->cboShader->Text = revertShaderText;
+			this->VMTOptions->txtBaseTexture1->Text = revertBaseText;
 
 			this->Log(String::Concat("Exiting ", sInputFolder, "."), System::Drawing::Color::Green);
 		}
@@ -783,6 +969,16 @@ namespace VTFEdit
 
 		private: System::Void btnOptions_Click(System::Object ^  sender, System::EventArgs ^  e)
 		{
+			// Find the center of the main window to make this dialog box be centered on it.
+			this->Options->Location = Point(
+				(this->Location.X + (this->Width / 2)) - (this->Options->Width / 2),
+				(this->Location.Y + (this->Height / 2)) - (this->Options->Height / 2)
+			);
+			// Basic check if the Options box's location will be outside of the monitor's bounds.
+			if (this->Options->Location.X < 0 || this->Options->Location.Y < 0)
+			{
+				this->Options->Location = Point(0, 0);
+			}
 			this->Options->ShowDialog();
 		}
 
@@ -794,13 +990,25 @@ namespace VTFEdit
 			this->txtLog->AppendText(String::Concat(sString, "\n"));
 			this->txtLog->Refresh();
 		}
-	private: System::Void txtToVTFFilter_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
-private: System::Void txtFromVTFFilter_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
-private: System::Void txtOutputFolder_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
-private: System::Void cboFromVTFFormat_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-}
+		private: System::Void btnVMTOptions_Click(System::Object^ sender, System::EventArgs^ e) {
+			revertShaderText = this->VMTOptions->cboShader->Text;
+			revertBaseText = this->VMTOptions->txtBaseTexture1->Text;
+			// Converting some things temporarily so I don't have to make a whole new dialog for this.
+			this->VMTOptions->btnCreate->Text = "OK";
+			this->VMTOptions->btnCreate->Click -= gcnew System::EventHandler(this->VMTOptions, &CVMTCreate::btnCreate_Click);
+			this->VMTOptions->btnCreate->DialogResult = System::Windows::Forms::DialogResult::OK;
+			this->VMTOptions->txtBaseTexture1->Text = "";
+			this->VMTOptions->txtBaseTexture1->Enabled = false;
+			this->VMTOptions->btnBaseTexture1->Enabled = false;
+
+			this->VMTOptions->ShowDialog();
+
+			this->VMTOptions->btnCreate->Text = "Create";
+			this->VMTOptions->btnCreate->Click += gcnew System::EventHandler(this->VMTOptions, &CVMTCreate::btnCreate_Click);
+			this->VMTOptions->btnCreate->DialogResult = System::Windows::Forms::DialogResult::None;
+
+			this->VMTOptions->txtBaseTexture1->Enabled = true;
+			this->VMTOptions->btnBaseTexture1->Enabled = true;
+		}
 };
 }

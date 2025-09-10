@@ -89,6 +89,8 @@ typedef struct tagSVTFCreateOptions
 
 	vlBool bSphereMap;									//!< Generate a sphere map for six faced environment maps.
 	vlBool bSRGB;										//!< Texture is in the SRGB color space.
+
+	vlUInt nAlphaThreshold;								//!< Alpha threshold for One Bit Alpha. Pixel alpha below this value is set to 0.
 } SVTFCreateOptions;
 #pragma pack()
 
@@ -286,6 +288,8 @@ namespace VTFLib
 	private:
 		vlBool IsPowerOfTwo(vlUInt uiSize);
 		vlUInt NextPowerOfTwo(vlUInt uiSize);
+		vlBool IsMultipleOfFour(vlUInt uiSize);
+		vlUInt NearestMultipleOfFour(vlUInt uiSize);
 
 		vlVoid ComputeResources();	 //!< Computes header VTF directory resources.
 
@@ -306,6 +310,7 @@ namespace VTFLib
 
 		vlUInt GetMajorVersion() const;	 //!< Returns the VTF file major version number.
 		vlUInt GetMinorVersion() const;	 //!< Returns the VTF file minor version number.
+		vlVoid SetMinorVersion(vlUInt version);	 //!< Sets the VTF file minor version number.
 		vlUInt GetSize() const;			 //!< Returns the VTF file size in bytes.
 
 		vlUInt GetWidth() const;	//!< Returns the width of the image in pixels from the VTF header.
@@ -405,7 +410,7 @@ namespace VTFLib
 		vlBool GetHasThumbnail() const;		//!< Returns if a the current VTF image image contains a thumbnail version.
 
 		vlUInt GetThumbnailWidth() const;	//!< Returns the width in pixels of the current images thumbnail.
-		vlUInt GetThumbnailHeight() const;	//!< Returns the heught in pixels of the current images thumbnail.
+		vlUInt GetThumbnailHeight() const;	//!< Returns the height in pixels of the current images thumbnail.
 
 		VTFImageFormat GetThumbnailFormat() const;	//!< Returns the image format of the current images thumbnail.
 
@@ -640,7 +645,7 @@ namespace VTFLib
 			\param DestFormat is the image format you wish to convert to.
 			\return true on sucessful conversion, otherwise false.
 		*/
-		static vlBool ConvertFromRGBA8888(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat);
+		static vlBool ConvertFromRGBA8888(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat, vlUInt nAlphaThreshold = 0);
 
 		//! Convert an image from any format to any format.
 		/*!
@@ -654,7 +659,7 @@ namespace VTFLib
 			\param DestFormat is the image format you wish to convert to.
 			\return true on sucessful conversion, otherwise false.
 		*/
-		static vlBool Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat, VTFImageFormat DestFormat);
+		static vlBool Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat, VTFImageFormat DestFormat, vlUInt nAlphaThreshold = 0);
 
 		//! Re-sizes an image.
 		/*!
@@ -678,7 +683,7 @@ namespace VTFLib
 		static vlBool DecompressDXTn(vlByte *src, vlByte *dst, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat SourceFormat);
 
 		// DXTn format compression function
-		static vlBool CompressDXTn(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat);
+		static vlBool CompressDXTn(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt uiHeight, VTFImageFormat DestFormat, vlUInt nAlphaThreshold);
 
 	public:
 

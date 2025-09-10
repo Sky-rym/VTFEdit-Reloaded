@@ -123,6 +123,11 @@
   <metadata name="tipMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>118, 17</value>
   </metadata>
+  <data name="chkSrgb.ToolTip" xml:space="preserve">
+    <value>Whether or not to treat the input image as sRGB instead of Linear when generating mipmaps or resizing. 
+Turn this off when creating textures that are not meant to be viewed directly, such as normal maps and specular masks. 
+(aka turn this off for pretty much anything that's not a diffuse/basetexture).</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>38</value>
   </metadata>

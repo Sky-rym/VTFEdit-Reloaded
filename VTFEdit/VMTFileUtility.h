@@ -138,115 +138,116 @@ namespace VTFEdit
 		}
 
 		// Tokenizes multi byte tokens.
-		ref class CSyntaxHilighter
-		{
-		private:
-			String ^ sOldText;
-			System::Windows::Forms::RichTextBox ^ TextBox;
+		// Disabled for performance reasons.
+		//ref class CSyntaxHilighter
+		//{
+		//private:
+		//	String ^ sOldText;
+		//	System::Windows::Forms::RichTextBox ^ TextBox;
 
-		public:
-			CSyntaxHilighter(System::Windows::Forms::RichTextBox ^ TextBox) : sOldText(""), TextBox(TextBox)
-			{
-				Enabled = false;
-			}
+		//public:
+		//	CSyntaxHilighter(System::Windows::Forms::RichTextBox ^ TextBox) : sOldText(""), TextBox(TextBox)
+		//	{
+		//		Enabled = false;
+		//	}
 
-		public:
-			property bool Enabled;
+		//public:
+		//	property bool Enabled;
 
-			void Purge()
-			{
-				sOldText = "";
-			}
+		//	void Purge()
+		//	{
+		//		sOldText = "";
+		//	}
 
-			void Process()
-			{
-				if (!this->Enabled)
-					return;
+		//	void Process()
+		//	{
+		//		if (!this->Enabled)
+		//			return;
 
-				int iSelectionStart = this->TextBox->SelectionStart;
-				int iSelectionLength = this->TextBox->SelectionLength;
+		//		int iSelectionStart = this->TextBox->SelectionStart;
+		//		int iSelectionLength = this->TextBox->SelectionLength;
 
-				HWND Handle = (HWND)this->TextBox->Handle.ToPointer();
+		//		HWND Handle = (HWND)this->TextBox->Handle.ToPointer();
 
-				SendMessage(Handle, WM_SETREDRAW, FALSE, 0);
-				LRESULT EventMask = SendMessage(Handle, EM_SETEVENTMASK, 0, 0);
+		//		SendMessage(Handle, WM_SETREDRAW, FALSE, 0);
+		//		LRESULT EventMask = SendMessage(Handle, EM_SETEVENTMASK, 0, 0);
 
-				POINT ScrollLocation;
-				SendMessage(Handle, EM_GETSCROLLPOS, 0, (LPARAM)&ScrollLocation);
+		//		POINT ScrollLocation;
+		//		SendMessage(Handle, EM_GETSCROLLPOS, 0, (LPARAM)&ScrollLocation);
 
-				TextBox->Select(0, TextBox->Text->Length);
-				array<Int32>^ tabs = gcnew array<Int32>(4);
-				// Consolas has a font-width of 55%
-				// The thing is 10px...
-				tabs[0] = 9 * 4;
-				for (int i = 1; i < 4; i++)
-				{
-					tabs[i] = tabs[0] * (i + 1);
-				}
-				TextBox->SelectionTabs = tabs;
-				
-				bool quoted = false;
-				bool key = true;
-				bool hadCharThisLine = false;
-				bool comment = false;
-				char lastChar = '\0';
-				for (int i = 0; i < TextBox->Text->Length; i++)
-				{
-					char character = char(TextBox->Text[i]);
-					char nextCharacter = char((i + 1) != TextBox->Text->Length ? TextBox->Text[i + 1] : '\0');
-					bool validQuote = character == '"' && lastChar != '\\';
-					if (validQuote)
-						quoted = !quoted;
+		//		TextBox->Select(0, TextBox->Text->Length);
+		//		array<Int32>^ tabs = gcnew array<Int32>(4);
+		//		// Consolas has a font-width of 55%
+		//		// The thing is 10px...
+		//		tabs[0] = 9 * 4;
+		//		for (int i = 1; i < 4; i++)
+		//		{
+		//			tabs[i] = tabs[0] * (i + 1);
+		//		}
+		//		TextBox->SelectionTabs = tabs;
+		//		
+		//		bool quoted = false;
+		//		bool key = true;
+		//		bool hadCharThisLine = false;
+		//		bool comment = false;
+		//		char lastChar = '\0';
+		//		for (int i = 0; i < TextBox->Text->Length; i++)
+		//		{
+		//			char character = char(TextBox->Text[i]);
+		//			char nextCharacter = char((i + 1) != TextBox->Text->Length ? TextBox->Text[i + 1] : '\0');
+		//			bool validQuote = character == '"' && lastChar != '\\';
+		//			if (validQuote)
+		//				quoted = !quoted;
 
-					if ((character == ' ' || character == '\t') && !quoted && hadCharThisLine)
-						key = !key;
+		//			if ((character == ' ' || character == '\t') && !quoted && hadCharThisLine)
+		//				key = !key;
 
-					if (character == '\n')
-					{
-						hadCharThisLine = false;
-						key = true;
-						comment = false;
-					}
+		//			if (character == '\n')
+		//			{
+		//				hadCharThisLine = false;
+		//				key = true;
+		//				comment = false;
+		//			}
 
-					comment |= character == '/' && nextCharacter == '/';
+		//			comment |= character == '/' && nextCharacter == '/';
 
-					this->TextBox->Select(i, 1);
-					this->TextBox->SelectionFont = this->TextBox->Font;
-					if (comment)
-						this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(181, 189, 104);
-					else if (character == '{' || character == '}' || validQuote)
-						this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(197, 200, 198);
-					else if (key)
-					{
-						if (character == '$' && (!hadCharThisLine || (lastChar == '"')))
-							this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(222, 147, 144);
-						else if (character == '%' && (!hadCharThisLine || (lastChar == '"')))
-							this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(138, 190, 183);
-						else
-							this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(204, 102, 102);
-					}
-					else
-					{
-						if (character == '[' || character == ']')
-							this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(197, 200, 198);
-						else
-							this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(129, 162, 190);
-					}
+		//			this->TextBox->Select(i, 1);
+		//			this->TextBox->SelectionFont = this->TextBox->Font;
+		//			if (comment)
+		//				this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(181, 189, 104);
+		//			else if (character == '{' || character == '}' || validQuote)
+		//				this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(197, 200, 198);
+		//			else if (key)
+		//			{
+		//				if (character == '$' && (!hadCharThisLine || (lastChar == '"')))
+		//					this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(222, 147, 144);
+		//				else if (character == '%' && (!hadCharThisLine || (lastChar == '"')))
+		//					this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(138, 190, 183);
+		//				else
+		//					this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(204, 102, 102);
+		//			}
+		//			else
+		//			{
+		//				if (character == '[' || character == ']')
+		//					this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(197, 200, 198);
+		//				else
+		//					this->TextBox->SelectionColor = System::Drawing::Color::FromArgb(129, 162, 190);
+		//			}
 
-					hadCharThisLine = hadCharThisLine || !(character == ' ' || character == '\t' || character == '\n');
+		//			hadCharThisLine = hadCharThisLine || !(character == ' ' || character == '\t' || character == '\n');
 
-					lastChar = character;
-				}
+		//			lastChar = character;
+		//		}
 
-				this->TextBox->Select(iSelectionStart, iSelectionLength);
+		//		this->TextBox->Select(iSelectionStart, iSelectionLength);
 
-				SendMessage(Handle, EM_SETSCROLLPOS, 0, (LPARAM)&ScrollLocation);
+		//		SendMessage(Handle, EM_SETSCROLLPOS, 0, (LPARAM)&ScrollLocation);
 
-				SendMessage(Handle, EM_SETEVENTMASK, 0, EventMask);
-				SendMessage(Handle, WM_SETREDRAW, TRUE, 0);
+		//		SendMessage(Handle, EM_SETEVENTMASK, 0, EventMask);
+		//		SendMessage(Handle, WM_SETREDRAW, TRUE, 0);
 
-				RedrawWindow(Handle, NULL, NULL, RDW_INVALIDATE);
-			}
-		};
+		//		RedrawWindow(Handle, NULL, NULL, RDW_INVALIDATE);
+		//	}
+		//};
 	};
 }

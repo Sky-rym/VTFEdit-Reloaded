@@ -15,17 +15,18 @@
     <RootNamespace>VTFEdit</RootNamespace>
     <Keyword>ManagedCProj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>VTFEdit Reloaded</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
@@ -113,7 +114,6 @@ copy "$(SolutionDir)..\..\thirdparty\bin\HLLib.dll" "$(TargetDir)"
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)VTFLib\$(Platform)\$(Configuration)\VTFLib.dll" "$(TargetDir)"
 copy "$(SolutionDir)..\..\thirdparty\bin\DevIL.dll" "$(TargetDir)"
-copy "$(SolutionDir)..\..\thirdparty\bin\HLLib.dll" "$(TargetDir)"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -149,7 +149,8 @@ copy "$(SolutionDir)..\..\thirdparty\bin\HLLib.dll" "$(TargetDir)"
     <ClCompile Include="..\..\..\VTFEdit\VMTCreate.cpp" />
     <ClCompile Include="..\..\..\VTFEdit\VTFEdit.cpp" />
     <ClCompile Include="..\..\..\VTFEdit\VTFOptions.cpp" />
-    <ClCompile Include="..\..\..\VTFEdit\WADConvert.cpp" />
+    <ClCompile Include="..\..\..\VTFEdit\VTFResources.cpp" />
+    <!--<ClCompile Include="..\..\..\VTFEdit\WADConvert.cpp" /> -->
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\VTFEdit\About.h">
@@ -173,9 +174,12 @@ copy "$(SolutionDir)..\..\thirdparty\bin\HLLib.dll" "$(TargetDir)"
     <ClInclude Include="..\..\..\VTFEdit\VTFOptions.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="..\..\..\VTFEdit\WADConvert.h">
+    <ClInclude Include="..\..\..\VTFEdit\VTFResources.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <!-- <ClInclude Include="..\..\..\VTFEdit\WADConvert.h">
+      <FileType>CppForm</FileType>
+    </ClInclude> -->
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\VTFEdit\app.ico" />
@@ -209,11 +213,14 @@ copy "$(SolutionDir)..\..\thirdparty\bin\HLLib.dll" "$(TargetDir)"
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VTFEdit.CVTFOptions.resources</LogicalName>
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VTFEdit.CVTFOptions.resources</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\VTFEdit\WADConvert.resX">
+    <EmbeddedResource Include="..\..\..\VTFEdit\VTFResources.resx">
+      <DependentUpon>..\..\..\VTFEdit\VTFResources.h</DependentUpon>
+    </EmbeddedResource>
+    <!-- <EmbeddedResource Include="..\..\..\VTFEdit\WADConvert.resX">
       <DependentUpon>..\..\..\VTFEdit\WADConvert.h</DependentUpon>
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VTFEdit.CWADConvert.resources</LogicalName>
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VTFEdit.CWADConvert.resources</LogicalName>
-    </EmbeddedResource>
+    </EmbeddedResource> -->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VTFLib\VTFLib.vcxproj">

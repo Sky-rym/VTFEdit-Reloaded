@@ -40,63 +40,67 @@ namespace VTFEdit
 
 	private: System::Windows::Forms::OpenFileDialog ^  dlgOpenVTFFile;
 	private: System::Windows::Forms::GroupBox ^  grpTextures;
-	private: System::Windows::Forms::Button ^  btnBaseTexture1;
-	private: System::Windows::Forms::TextBox ^  txtBaseTexture1;
+	public: System::Windows::Forms::Button ^  btnBaseTexture1;
+	public: System::Windows::Forms::TextBox ^  txtBaseTexture1;
 	private: System::Windows::Forms::Label ^  lblBaseTexture1;
 	private: System::Windows::Forms::TabControl ^  tabMain;
 	private: System::Windows::Forms::TabPage ^  tabTextures;
 	private: System::Windows::Forms::Button ^  btnBumpTexture1;
-	private: System::Windows::Forms::TextBox ^  txtBumpTexture1;
+	public: System::Windows::Forms::TextBox ^  txtBumpTexture1;
 	private: System::Windows::Forms::Label ^  lblBumpTexture1;
 	private: System::Windows::Forms::Button ^  btnEnviromentTexture;
-	private: System::Windows::Forms::TextBox ^  txtEnviromentTexture;
+	public: System::Windows::Forms::TextBox ^  txtEnviromentTexture;
 	private: System::Windows::Forms::Label ^  lblEnviromentTexture;
 	private: System::Windows::Forms::Button ^  btnEnviromentMaskTexture;
-	private: System::Windows::Forms::TextBox ^  txtEnviromentMaskTexture;
+	public: System::Windows::Forms::TextBox ^  txtEnviromentMaskTexture;
 	private: System::Windows::Forms::Label ^  lblEnviromentMaskTexture;
 	private: System::Windows::Forms::Button ^  btnDetailTexture;
-	private: System::Windows::Forms::TextBox ^  txtDetailTexture;
+	public: System::Windows::Forms::TextBox ^  txtDetailTexture;
 	private: System::Windows::Forms::Label ^  lblDetailTexture;
 	private: System::Windows::Forms::ToolTip ^  tipMain;
 	private: System::Windows::Forms::Button ^  btnClose;
-	private: System::Windows::Forms::Button ^  btnCreate;
+	public: System::Windows::Forms::Button ^  btnCreate;
 	private: System::Windows::Forms::Button ^  btnToolTexture;
-	private: System::Windows::Forms::TextBox ^  txtToolTexture;
+	public: System::Windows::Forms::TextBox ^  txtToolTexture;
 	private: System::Windows::Forms::Label ^  lblToolTexture;
 	private: System::Windows::Forms::Button ^  btnBumpTexture2;
-	private: System::Windows::Forms::TextBox ^  txtBumpTexture2;
+	public: System::Windows::Forms::TextBox ^  txtBumpTexture2;
 	private: System::Windows::Forms::Label ^  lblBumpTexture2;
 	private: System::Windows::Forms::Label ^  lblBaseTexture2;
 	private: System::Windows::Forms::Button ^  btnNormalTexture;
-	private: System::Windows::Forms::TextBox ^  txtNormalTexture;
+	public: System::Windows::Forms::TextBox ^  txtNormalTexture;
 	private: System::Windows::Forms::Label ^  lblNormalTexture;
 	private: System::Windows::Forms::Button ^  btnDuDvTexture;
-	private: System::Windows::Forms::TextBox ^  txtDuDvTexture;
+	public: System::Windows::Forms::TextBox ^  txtDuDvTexture;
 	private: System::Windows::Forms::Label ^  lblDuDvTexture;
 	private: System::Windows::Forms::Button ^  btnBaseTexture2;
-	private: System::Windows::Forms::TextBox ^  txtBaseTexture2;
+	public: System::Windows::Forms::TextBox ^  txtBaseTexture2;
 	private: System::Windows::Forms::TabPage ^  tabOptions;
 	private: System::Windows::Forms::GroupBox ^  grpOptions;
 	private: System::Windows::Forms::Button ^  btnClear;
-	private: System::Windows::Forms::SaveFileDialog ^  dlgSaveVMTFile;
+	public: System::Windows::Forms::SaveFileDialog ^  dlgSaveVMTFile;
 	private: System::Windows::Forms::Label ^  lblShader;
-	private: System::Windows::Forms::ComboBox ^  cboShader;
-	private: System::Windows::Forms::ComboBox ^  cboSurface1;
+	public: System::Windows::Forms::ComboBox ^  cboShader;
+	public: System::Windows::Forms::ComboBox ^  cboSurface1;
 	private: System::Windows::Forms::Label ^  lblSurface1;
-	private: System::Windows::Forms::ComboBox ^  cboSurface2;
+	public: System::Windows::Forms::ComboBox ^  cboSurface2;
 	private: System::Windows::Forms::Label ^  lblSurface2;
 	private: System::Windows::Forms::Label ^  lblKeywords;
-	private: System::Windows::Forms::TextBox ^  txtKeywords;
-	private: System::Windows::Forms::CheckBox ^  chkTranslucent;
-	private: System::Windows::Forms::CheckBox ^  chkAdditive;
-	private: System::Windows::Forms::CheckBox ^  chkNoCull;
-	private: System::Windows::Forms::CheckBox ^  chkAlphaTest;
-	private: System::Windows::Forms::CheckBox ^  chkNoLOD;
-	private: System::Windows::Forms::CheckBox ^  chkNoDecal;
-	private: System::Windows::Forms::CheckBox ^  chkVertexColor;
-	private: System::Windows::Forms::CheckBox ^  chkVertexAlpha;
-	private: System::Windows::Forms::CheckBox^ chkModel;
-	private: System::Windows::Forms::CheckBox^ chkDecal;
+	public: System::Windows::Forms::TextBox ^  txtKeywords;
+	public: System::Windows::Forms::CheckBox ^  chkTranslucent;
+	public: System::Windows::Forms::CheckBox ^  chkAdditive;
+	public: System::Windows::Forms::CheckBox ^  chkNoCull;
+	public: System::Windows::Forms::CheckBox ^  chkAlphaTest;
+	public: System::Windows::Forms::CheckBox ^  chkNoLOD;
+	public: System::Windows::Forms::CheckBox ^  chkNoDecal;
+	public: System::Windows::Forms::CheckBox ^  chkVertexColor;
+	public: System::Windows::Forms::CheckBox ^  chkVertexAlpha;
+	public: System::Windows::Forms::CheckBox^ chkModel;
+	public: System::Windows::Forms::CheckBox^ chkDecal;
+	public: System::Windows::Forms::CheckBox^ chkHalfLambert;
+	public: System::Windows::Forms::CheckBox^ chkIgnoreZ;
+	public: System::Windows::Forms::CheckBox^ chkNoFog;
+	public: System::Windows::Forms::CheckBox^ chkAlphaCoverage;
 
 	private: System::ComponentModel::IContainer^ components;
 
@@ -150,6 +154,9 @@ namespace VTFEdit
 			this->tabTextures = (gcnew System::Windows::Forms::TabPage());
 			this->tabOptions = (gcnew System::Windows::Forms::TabPage());
 			this->grpOptions = (gcnew System::Windows::Forms::GroupBox());
+			this->chkHalfLambert = (gcnew System::Windows::Forms::CheckBox());
+			this->chkIgnoreZ = (gcnew System::Windows::Forms::CheckBox());
+			this->chkNoFog = (gcnew System::Windows::Forms::CheckBox());
 			this->chkDecal = (gcnew System::Windows::Forms::CheckBox());
 			this->chkModel = (gcnew System::Windows::Forms::CheckBox());
 			this->txtKeywords = (gcnew System::Windows::Forms::TextBox());
@@ -173,6 +180,7 @@ namespace VTFEdit
 			this->btnCreate = (gcnew System::Windows::Forms::Button());
 			this->btnClear = (gcnew System::Windows::Forms::Button());
 			this->dlgSaveVMTFile = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->chkAlphaCoverage = (gcnew System::Windows::Forms::CheckBox());
 			this->grpTextures->SuspendLayout();
 			this->tabMain->SuspendLayout();
 			this->tabTextures->SuspendLayout();
@@ -537,6 +545,10 @@ namespace VTFEdit
 			// 
 			// grpOptions
 			// 
+			this->grpOptions->Controls->Add(this->chkAlphaCoverage);
+			this->grpOptions->Controls->Add(this->chkHalfLambert);
+			this->grpOptions->Controls->Add(this->chkIgnoreZ);
+			this->grpOptions->Controls->Add(this->chkNoFog);
 			this->grpOptions->Controls->Add(this->chkDecal);
 			this->grpOptions->Controls->Add(this->chkModel);
 			this->grpOptions->Controls->Add(this->txtKeywords);
@@ -564,10 +576,40 @@ namespace VTFEdit
 			this->grpOptions->Text = L"Options:";
 			this->grpOptions->Enter += gcnew System::EventHandler(this, &CVMTCreate::grpOptions_Enter);
 			// 
+			// chkHalfLambert
+			// 
+			this->chkHalfLambert->Location = System::Drawing::Point(192, 135);
+			this->chkHalfLambert->Name = L"chkHalfLambert";
+			this->chkHalfLambert->Size = System::Drawing::Size(87, 24);
+			this->chkHalfLambert->TabIndex = 23;
+			this->chkHalfLambert->Text = L"Half Lambert";
+			this->tipMain->SetToolTip(this->chkHalfLambert, L"$halflambert\r\nOnly works on models.");
+			this->chkHalfLambert->UseVisualStyleBackColor = true;
+			// 
+			// chkIgnoreZ
+			// 
+			this->chkIgnoreZ->Location = System::Drawing::Point(192, 117);
+			this->chkIgnoreZ->Name = L"chkIgnoreZ";
+			this->chkIgnoreZ->Size = System::Drawing::Size(87, 24);
+			this->chkIgnoreZ->TabIndex = 22;
+			this->chkIgnoreZ->Text = L"Ignore Z";
+			this->tipMain->SetToolTip(this->chkIgnoreZ, L"$ignorez");
+			this->chkIgnoreZ->UseVisualStyleBackColor = true;
+			// 
+			// chkNoFog
+			// 
+			this->chkNoFog->Location = System::Drawing::Point(192, 98);
+			this->chkNoFog->Name = L"chkNoFog";
+			this->chkNoFog->Size = System::Drawing::Size(87, 24);
+			this->chkNoFog->TabIndex = 21;
+			this->chkNoFog->Text = L"No Fog";
+			this->tipMain->SetToolTip(this->chkNoFog, L"$nofog");
+			this->chkNoFog->UseVisualStyleBackColor = true;
+			// 
 			// chkDecal
 			// 
 			this->chkDecal->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkDecal->Location = System::Drawing::Point(167, 166);
+			this->chkDecal->Location = System::Drawing::Point(111, 174);
 			this->chkDecal->Name = L"chkDecal";
 			this->chkDecal->Size = System::Drawing::Size(51, 19);
 			this->chkDecal->TabIndex = 19;
@@ -578,7 +620,7 @@ namespace VTFEdit
 			// chkModel
 			// 
 			this->chkModel->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkModel->Location = System::Drawing::Point(167, 148);
+			this->chkModel->Location = System::Drawing::Point(111, 156);
 			this->chkModel->Name = L"chkModel";
 			this->chkModel->Size = System::Drawing::Size(51, 18);
 			this->chkModel->TabIndex = 18;
@@ -597,7 +639,7 @@ namespace VTFEdit
 			// chkVertexAlpha
 			// 
 			this->chkVertexAlpha->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkVertexAlpha->Location = System::Drawing::Point(6, 148);
+			this->chkVertexAlpha->Location = System::Drawing::Point(6, 157);
 			this->chkVertexAlpha->Name = L"chkVertexAlpha";
 			this->chkVertexAlpha->Size = System::Drawing::Size(81, 18);
 			this->chkVertexAlpha->TabIndex = 16;
@@ -607,7 +649,7 @@ namespace VTFEdit
 			// chkVertexColor
 			// 
 			this->chkVertexColor->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkVertexColor->Location = System::Drawing::Point(6, 166);
+			this->chkVertexColor->Location = System::Drawing::Point(6, 175);
 			this->chkVertexColor->Name = L"chkVertexColor";
 			this->chkVertexColor->Size = System::Drawing::Size(81, 19);
 			this->chkVertexColor->TabIndex = 17;
@@ -617,7 +659,7 @@ namespace VTFEdit
 			// chkNoDecal
 			// 
 			this->chkNoDecal->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkNoDecal->Location = System::Drawing::Point(167, 111);
+			this->chkNoDecal->Location = System::Drawing::Point(111, 119);
 			this->chkNoDecal->Name = L"chkNoDecal";
 			this->chkNoDecal->Size = System::Drawing::Size(66, 19);
 			this->chkNoDecal->TabIndex = 13;
@@ -627,7 +669,7 @@ namespace VTFEdit
 			// chkNoLOD
 			// 
 			this->chkNoLOD->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkNoLOD->Location = System::Drawing::Point(167, 129);
+			this->chkNoLOD->Location = System::Drawing::Point(111, 137);
 			this->chkNoLOD->Name = L"chkNoLOD";
 			this->chkNoLOD->Size = System::Drawing::Size(62, 19);
 			this->chkNoLOD->TabIndex = 14;
@@ -637,7 +679,7 @@ namespace VTFEdit
 			// chkAlphaTest
 			// 
 			this->chkAlphaTest->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkAlphaTest->Location = System::Drawing::Point(6, 110);
+			this->chkAlphaTest->Location = System::Drawing::Point(6, 119);
 			this->chkAlphaTest->Name = L"chkAlphaTest";
 			this->chkAlphaTest->Size = System::Drawing::Size(75, 20);
 			this->chkAlphaTest->TabIndex = 9;
@@ -647,7 +689,7 @@ namespace VTFEdit
 			// chkNoCull
 			// 
 			this->chkNoCull->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkNoCull->Location = System::Drawing::Point(167, 92);
+			this->chkNoCull->Location = System::Drawing::Point(111, 100);
 			this->chkNoCull->Name = L"chkNoCull";
 			this->chkNoCull->Size = System::Drawing::Size(57, 19);
 			this->chkNoCull->TabIndex = 12;
@@ -657,7 +699,7 @@ namespace VTFEdit
 			// chkAdditive
 			// 
 			this->chkAdditive->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkAdditive->Location = System::Drawing::Point(6, 129);
+			this->chkAdditive->Location = System::Drawing::Point(6, 138);
 			this->chkAdditive->Name = L"chkAdditive";
 			this->chkAdditive->Size = System::Drawing::Size(66, 19);
 			this->chkAdditive->TabIndex = 8;
@@ -667,7 +709,7 @@ namespace VTFEdit
 			// chkTranslucent
 			// 
 			this->chkTranslucent->FlatStyle = System::Windows::Forms::FlatStyle::System;
-			this->chkTranslucent->Location = System::Drawing::Point(6, 91);
+			this->chkTranslucent->Location = System::Drawing::Point(6, 100);
 			this->chkTranslucent->Name = L"chkTranslucent";
 			this->chkTranslucent->Size = System::Drawing::Size(81, 20);
 			this->chkTranslucent->TabIndex = 15;
@@ -753,12 +795,12 @@ namespace VTFEdit
 			// 
 			// cboShader
 			// 
-			this->cboShader->Items->AddRange(gcnew cli::array< System::Object^  >(43) {
+			this->cboShader->Items->AddRange(gcnew cli::array< System::Object^  >(44) {
 				L"Aftershock", L"Cable", L"Character", L"Core",
 					L"DecalModulate", L"DepthOfField", L"Engine_Post", L"EyeRefract", L"Eyes", L"LensFX", L"LightmappedGeneric", L"LightmappedReflective",
 					L"LightmappedTwoTexture", L"Lightmapped_4WayBlend", L"Modulate", L"MonitorScreen", L"MotionBlur", L"Multiblend", L"PaintBlob",
 					L"ParallaxTest", L"Pyro_vision", L"RGBFilmGrain", L"Refract", L"Screenspace_general", L"Shadow", L"Sky", L"SolidEnergy", L"SplineRope",
-					L"SpriteCard", L"Subrect", L"Suppression", L"SurfaceGGX", L"Teeth", L"UnlitGeneric", L"UnlitTwoTexture", L"VertexLitGeneric",
+					L"Sprite", L"SpriteCard", L"Subrect", L"Suppression", L"SurfaceGGX", L"Teeth", L"UnlitGeneric", L"UnlitTwoTexture", L"VertexLitGeneric",
 					L"VolumeCloud", L"VortWarp", L"Water", L"WindowImposter", L"WorldGGX", L"WorldTwoTextureBlend", L"WorldVertexTransition"
 			});
 			this->cboShader->Location = System::Drawing::Point(72, 12);
@@ -812,6 +854,23 @@ namespace VTFEdit
 			// 
 			this->dlgSaveVMTFile->Filter = L"VMT Files (*.vmt)|*.vmt";
 			this->dlgSaveVMTFile->Title = L"Save VMT File";
+			// 
+			// chkAlphaCoverage
+			// 
+			this->chkAlphaCoverage->Location = System::Drawing::Point(192, 153);
+			this->chkAlphaCoverage->Name = L"chkAlphaCoverage";
+			this->chkAlphaCoverage->Size = System::Drawing::Size(102, 24);
+			this->chkAlphaCoverage->TabIndex = 24;
+			this->chkAlphaCoverage->Text = L"Alpha Coverage";
+			this->tipMain->SetToolTip(this->chkAlphaCoverage, L"$allowalphatocoverage\r\nOnly works with $alphatest and anti-aliasing enabled in your game config.");
+			this->chkAlphaCoverage->UseVisualStyleBackColor = true;
+			//
+			// tipMain
+			// 
+			this->tipMain->ShowAlways = true;
+			this->tipMain->AutoPopDelay = 20000;
+			this->tipMain->InitialDelay = 500;
+			this->tipMain->ReshowDelay = 100;
 			// 
 			// CVMTCreate
 			// 
@@ -957,7 +1016,7 @@ namespace VTFEdit
 			this->Clear();
 		}
 
-		private: System::Void AddVMTStringNode(VTFLib::CVMTFile &VMTFile, System::String ^sName, System::String ^sValue)
+		public: System::Void AddVMTStringNode(VTFLib::CVMTFile &VMTFile, System::String ^sName, System::String ^sValue)
 		{
 			if(sValue->Length == 0)
 				return;
@@ -983,7 +1042,7 @@ namespace VTFEdit
 			System::Runtime::InteropServices::Marshal::FreeHGlobal((IntPtr)cName);
 		}
 
-		private: System::Void AddVMTBooleanNode(VTFLib::CVMTFile &VMTFile, System::String ^sName, bool bValue, bool bDefault)
+		public: System::Void AddVMTBooleanNode(VTFLib::CVMTFile &VMTFile, System::String ^sName, bool bValue, bool bDefault)
 		{
 			if(bValue == bDefault)
 				return;
@@ -993,7 +1052,7 @@ namespace VTFEdit
 			System::Runtime::InteropServices::Marshal::FreeHGlobal((IntPtr)cName);
 		}
 
-		private: System::Void btnCreate_Click(System::Object ^  sender, System::EventArgs ^  e)
+		public: System::Void btnCreate_Click(System::Object ^  sender, System::EventArgs ^  e)
 		{
 			System::String ^sVMTFile = this->txtBaseTexture1->Text;
 
@@ -1040,6 +1099,10 @@ namespace VTFEdit
 			this->AddVMTBooleanNode(VMTFile, "$vertexcolor", this->chkVertexColor->Checked, false);
 			this->AddVMTBooleanNode(VMTFile, "$model", this->chkModel->Checked, false);
 			this->AddVMTBooleanNode(VMTFile, "$decal", this->chkDecal->Checked, false);
+			this->AddVMTBooleanNode(VMTFile, "$nofog", this->chkNoFog->Checked, false);
+			this->AddVMTBooleanNode(VMTFile, "$ignorez", this->chkIgnoreZ->Checked, false);
+			this->AddVMTBooleanNode(VMTFile, "$halflambert", this->chkHalfLambert->Checked, false);
+			this->AddVMTBooleanNode(VMTFile, "$allowalphatocoverage", this->chkAlphaCoverage->Checked, false);
 
 			cTemp = (char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->dlgSaveVMTFile->FileName).ToPointer();
 			VMTFile.Save(cTemp);

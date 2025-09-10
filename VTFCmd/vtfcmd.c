@@ -269,7 +269,7 @@ int main(int argc, char* argv[])
 			else if(stricmp(argv[i], "-srgb") == 0)
 			{
 				CreateOptions.bSRGB = vlTrue;
-				CreateOptions.uiFlags |= TEXTUREFLAGS_SRGB;
+				//CreateOptions.uiFlags |= TEXTUREFLAGS_SRGB; // Re-enable after properly implementing this.
 			}
 			else if(stricmp(argv[i], "-alphaformat") == 0)
 			{
@@ -535,6 +535,18 @@ int main(int argc, char* argv[])
 			{
 				bHdr = vlTrue;
 			}
+			else if ( stricmp( argv[ i ], "-alphathreshold" ) )
+			{
+				if(i + 1 < argc && sscanf(argv[++i], "%u", &uiTemp0) == 1)
+				{
+					CreateOptions.nAlphaThreshold = uiTemp0;
+				}
+				else
+				{
+					PrintUsage("-alphathreshold expects a whole number between the range of 0-255.");
+					return 2;
+				}
+			}
 			else
 			{
 				PrintUsage("Unknown argument: %s.", argv[i]);
@@ -664,38 +676,39 @@ void PrintUsage(const vlChar *lpError, ...)
 	va_list ArgumentList;
 
 	Print("Correct vtfcmd usage:\n");
-	Print(" -file <path>             (Input file path.)\n");
-	Print(" -folder <path>           (Input directory search string.)\n");
-	Print(" -output <path>           (Output directory.)\n");
-	Print(" -prefix <string>         (Output file prefix.)\n");
-	Print(" -postfix <string>        (Output file postfix.)\n");
-	Print(" -version <string>        (Output version.)\n");
-	Print(" -format <string>         (Output format to use on non-alpha (colour) textures.)\n");
-	Print(" -alphaformat <string>    (Output format to use on alpha textures.)\n");
-	Print(" -srgb                    (Whether to treat image as sRGB colour space or not)\n");
-	Print(" -flag <string>           (Output flags to set.)\n");
-	Print(" -resize                  (Resize the input to a power of 2.)\n");
-	Print(" -rmethod <string>        (Resize method to use.)\n");
-	Print(" -rfilter <string>        (Resize filter to use.)\n");
-	Print(" -rwidth <integer>        (Resize to specific width.)\n");
-	Print(" -rheight <integer>       (Resize to specific height.)\n");
-	Print(" -rclampwidth <integer>   (Maximum width to resize to.)\n");
-	Print(" -rclampheight <integer>  (Maximum height to resize to.)\n");
-	Print(" -gamma                   (Gamma correct image.)\n");
-	Print(" -gcorrection <single>    (Gamma correction to use.)\n");
-	Print(" -nomipmaps               (Don't generate mipmaps.)\n");
-	Print(" -mfilter <string>        (Mipmap filter to use.)\n");
-	Print(" -bumpscale <single>      (Engine bump mapping scale to use.)\n");
-	Print(" -nothumbnail             (Don't generate thumbnail image.)\n");
-	Print(" -noreflectivity          (Don't calculate reflectivity.)\n");
-	Print(" -shader <string>         (Create a material for the texture.)\n");
-	Print(" -param <string> <string> (Add a parameter to the material.)\n");
-	Print(" -recurse                 (Process directories recursively.)\n");
-	Print(" -exportformat <string>   (Convert VTF files to the format of this extension.)\n");
-	Print(" -silent                  (Silent mode.)\n");
-	Print(" -pause                   (Pause when done.)\n");
-	Print(" -hdr	                     (Indicate input is hdr.)\n");
-	Print(" -help                    (Display vtfcmd help.)\n");
+	Print(" -file <path>              (Input file path.)\n");
+	Print(" -folder <path>            (Input directory search string.)\n");
+	Print(" -output <path>            (Output directory.)\n");
+	Print(" -prefix <string>          (Output file prefix.)\n");
+	Print(" -postfix <string>         (Output file postfix.)\n");
+	Print(" -version <string>         (Output version.)\n");
+	Print(" -format <string>          (Output format to use on non-alpha (colour) textures.)\n");
+	Print(" -alphaformat <string>     (Output format to use on alpha textures.)\n");
+	Print(" -srgb                     (Whether to treat image as sRGB colour space or not)\n");
+	Print(" -flag <string>            (Output flags to set.)\n");
+	Print(" -resize                   (Resize the input to a power of 2.)\n");
+	Print(" -rmethod <string>         (Resize method to use.)\n");
+	Print(" -rfilter <string>         (Resize filter to use.)\n");
+	Print(" -rwidth <integer>         (Resize to specific width.)\n");
+	Print(" -rheight <integer>        (Resize to specific height.)\n");
+	Print(" -rclampwidth <integer>    (Maximum width to resize to.)\n");
+	Print(" -rclampheight <integer>   (Maximum height to resize to.)\n");
+	Print(" -alphathreshold <integer> (Alpha threshold for One Bit Alpha. Pixel alpha below this value is set to 0)\n");
+	Print(" -gamma                    (Gamma correct image.)\n");
+	Print(" -gcorrection <single>     (Gamma correction to use.)\n");
+	Print(" -nomipmaps                (Don't generate mipmaps.)\n");
+	Print(" -mfilter <string>         (Mipmap filter to use.)\n");
+	Print(" -bumpscale <single>       (Engine bump mapping scale to use.)\n");
+	Print(" -nothumbnail              (Don't generate thumbnail image.)\n");
+	Print(" -noreflectivity           (Don't calculate reflectivity.)\n");
+	Print(" -shader <string>          (Create a material for the texture.)\n");
+	Print(" -param <string> <string>  (Add a parameter to the material.)\n");
+	Print(" -recurse                  (Process directories recursively.)\n");
+	Print(" -exportformat <string>    (Convert VTF files to the format of this extension.)\n");
+	Print(" -silent                   (Silent mode.)\n");
+	Print(" -pause                    (Pause when done.)\n");
+	Print(" -hdr                      (Indicate input is hdr.)\n");
+	Print(" -help                     (Display vtfcmd help.)\n");
 	Print("\n");
 	Print("Example vtfcmd usage:\n");
 	Print("vtfcmd.exe -file \"C:\\texture1.bmp\" -file \"C:\\texture2.bmp\" -format \"dxt1\"\n");

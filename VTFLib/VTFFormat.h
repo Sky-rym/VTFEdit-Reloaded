@@ -96,9 +96,9 @@ typedef enum tagVTFImageFormat
 	IMAGE_FORMAT_ATI_DST16,
 	IMAGE_FORMAT_ATI_DST24,
 	IMAGE_FORMAT_NV_NULL,
-	IMAGE_FORMAT_ATI2N,						
-	IMAGE_FORMAT_ATI1N,
-	IMAGE_FORMAT_HDR_BGRA8888,					//!<  = Blue, Green, Red, Alpha - 32 bpp (HDR encoding)
+	IMAGE_FORMAT_ATI1N,						
+	IMAGE_FORMAT_ATI2N,
+	IMAGE_FORMAT_HDR_BGRA8888,				//!<  = Blue, Green, Red, Alpha - 32 bpp (HDR encoding)
 	/*
 	XBox:
 	IMAGE_FORMAT_X360_DST16,
@@ -250,8 +250,9 @@ typedef enum tagVTFResizeMethod
     RESIZE_NEAREST_POWER2 = 0,
     RESIZE_BIGGEST_POWER2,
     RESIZE_SMALLEST_POWER2,
+    RESIZE_NEAREST_MULTIPLE4,
     RESIZE_SET,
-	RESIZE_COUNT
+    RESIZE_COUNT
 } VTFResizeMethod;
 
 //! Spheremap creation look direction indices.
