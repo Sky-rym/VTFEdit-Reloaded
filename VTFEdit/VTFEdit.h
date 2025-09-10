@@ -3250,6 +3250,14 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 
 				VTFCreateOptions.ImageFormat = bHasAlpha ? Options->AlphaFormat : Options->NormalFormat;
 
+				if ( ( VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT1 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT3 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT5 ) && ( VTFCreateOptions.bMipmaps && VTFCreateOptions.ResizeMethod == RESIZE_NEAREST_MULTIPLE4 ) ) {
+					if ( bWarnings ) {
+						if ( bNotificationSounds ) {
+							System::Media::SystemSounds::Asterisk->Play();
+						}
+						MessageBox::Show("DXT Formats do not support mipmaps with Multiple of Four sizes. Mipmaps will not be generated for this VTF.", Application::ProductName, MessageBoxButtons::OK);
+					}
+				}
 				// Create the .vtf file.
 				if(VTFFile->Create(uiWidth, uiHeight, uiFrames, uiFaces, uiSlices, lpImageData, VTFCreateOptions) != vlFalse && CVTFFileUtility::CreateResources(Options, VTFFile))
 				{
