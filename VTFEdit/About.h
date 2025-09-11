@@ -162,7 +162,7 @@ namespace VTFEdit
 			this->lblAuthor->Name = L"lblAuthor";
 			this->lblAuthor->Size = System::Drawing::Size(264, 39);
 			this->lblAuthor->TabIndex = 2;
-			this->lblAuthor->Text = L"Authors: IAmKnotMax, Sky-rym, Joshua Ashton, Neil Jedrzejewski && Ryan Gregg";
+			this->lblAuthor->Text = L"Authors: IAmKnotMax, Skyrym, misyltoad, Neil Jedrzejewski && Ryan Gregg";
 			// 
 			// lblVTFEditVersion
 			// 
@@ -258,4 +258,5 @@ namespace VTFEdit
 			}
 		}
 };
+
 }
