@@ -596,10 +596,14 @@ vlBool CVTFFile::Create(vlUInt uiWidth, vlUInt uiHeight, vlUInt uiFrames, vlUInt
 			}
 		}
 
+		bool dxtFormat = ( VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT1 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT3 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT5 );
 		// Currently mipmaps are completely broken for DXT formats that use Multiple of Four resizing. Prevent it from making them.
-		bool allowMipmaps = ( !( ( VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT1 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT3 || VTFCreateOptions.ImageFormat == IMAGE_FORMAT_DXT5 ) && ( VTFCreateOptions.ResizeMethod == RESIZE_NEAREST_MULTIPLE4 && VTFCreateOptions.bMipmaps == true ) ) );
+		bool allowMipmaps = !( dxtFormat && ( VTFCreateOptions.ResizeMethod == RESIZE_NEAREST_MULTIPLE4 ) );
+
+		vlBool setMipmaps = vlBool(allowMipmaps && VTFCreateOptions.bMipmaps == true);
+
 		// Create image (allocate and setup structures).
-		if(!this->Create(uiWidth, uiHeight, uiFrames, uiFaces + (VTFCreateOptions.bSphereMap && uiFaces == 6 ? 1 : 0), uiSlices, VTFCreateOptions.ImageFormat, VTFCreateOptions.bThumbnail, allowMipmaps, vlFalse))
+		if(!this->Create(uiWidth, uiHeight, uiFrames, uiFaces + (VTFCreateOptions.bSphereMap && uiFaces == 6 ? 1 : 0), uiSlices, VTFCreateOptions.ImageFormat, VTFCreateOptions.bThumbnail, setMipmaps, vlFalse))
 		{
 			throw 0;
 		}
@@ -626,7 +630,7 @@ vlBool CVTFFile::Create(vlUInt uiWidth, vlUInt uiHeight, vlUInt uiFrames, vlUInt
 		}
 
 		// Generate mipmaps off source image.
-		if(VTFCreateOptions.bMipmaps && this->Header->MipCount != 1)
+		if(setMipmaps && this->Header->MipCount != 1)
 		{
 			auto temp = std::vector<vlByte>(this->Header->Width * this->Header->Height * 4);
 
