@@ -64,8 +64,7 @@ IDI_ICON1               ICON                    ".\\app.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,0,9
- PRODUCTVERSION 2,0,9
+ FILEVERSION 2,1,5
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -81,12 +80,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "VTFEdit"
-            VALUE "FileVersion", "2.1.4"
+            VALUE "FileVersion", "2.1.5"
             VALUE "InternalName", "VTFEdit"
             VALUE "LegalCopyright", "Copyright (C) 2025 IAmKnotMax, 2024 Sky-rym, 2020 Joshua Ashton, 2005-2011 Neil Jedrzejewski & Ryan Gregg"
             VALUE "OriginalFilename", "VTFEdit.exe"
             VALUE "ProductName", "VTFEdit Reloaded"
-            VALUE "ProductVersion", "2.1.4"
         END
     END
     BLOCK "VarFileInfo"
