@@ -3037,7 +3037,11 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 
 				this->VTFFile->SetMinorVersion(minVersion);
 				// normally $reflectivity is in the range of 0.0 - 1.0
-				this->VTFFile->SetReflectivity(float(this->colorDialog->Color.R)/255, float(this->colorDialog->Color.G)/255, float(this->colorDialog->Color.B)/255);
+				vlSingle sX, sY, sZ;
+				sX = float(this->clrReflectivity->BackColor.R)/255;
+				sY = float(this->clrReflectivity->BackColor.G)/255;
+				sZ = float(this->clrReflectivity->BackColor.B)/255;
+				this->VTFFile->SetReflectivity(sX, sY, sZ);
 
 				if(this->VTFFile->Save(cPath))
 				{
