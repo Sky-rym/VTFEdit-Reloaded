@@ -9,7 +9,7 @@ VTFLib includes two GPL example applications, VTFCmd and VTFEdit. VTFCmd is a C 
 * **Title**: VTFLib
 * **Written In**: C/C++
 * **Date**: July 25th, 2011
-* **Authors**: [IAmKnotMax](https://github.com/WereTech), [Skyrym](https://github.com/Sky-rym), [misyltoad](https://github.com/misyltoad), [Neil 'Jed' Jedrzejewski](https://github.com/NeilJed) & [Ryan Gregg](http://nemesis.thewavelength.net/)
+* **Authors**: [IAmKnotMax](https://github.com/WereTech), [Skyrym](https://github.com/Sky-rym), [misyltoad](https://github.com/misyltoad), [Neil 'Jed' Jedrzejewski](https://github.com/NeilJed) & [Ryan Gregg](https://nemstools.github.io/)
 
 ## Project Structure
 
