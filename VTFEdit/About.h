@@ -233,7 +233,7 @@ namespace VTFEdit
 		{
 			try
 			{
-				System::Diagnostics::Process::Start("http://nemesis.thewavelength.net/");
+				System::Diagnostics::Process::Start("https://nemstools.github.io/");
 			}
 			catch(Exception ^)
 			{
@@ -260,3 +260,4 @@ namespace VTFEdit
 };
 
 }
+
