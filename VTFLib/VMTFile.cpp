@@ -105,6 +105,7 @@ enum EToken
 	TOKEN_NEWLINE,			// Token is a newline (\n).
 	TOKEN_WHITESPACE,		// Token is any whitespace other than a newline.
 	TOKEN_FORWARD_SLASH,	// Token is a forward slash (/).
+	TOKEN_ASTERISK,			// Token is an asterisk, can be used for multi-line comments (*).
 	TOKEN_QUOTE,			// Token is a quote (").
 	TOKEN_OPEN_BRACE,		// Token is an open brace ({).
 	TOKEN_CLOSE_BRACE,		// Token is a close brace (}).
@@ -276,6 +277,10 @@ private:
 		{
 			this->NextToken = new CToken(TOKEN_FORWARD_SLASH, cChar);
 		}
+		else if(cChar == '*')
+		{
+			this->NextToken = new CToken(TOKEN_ASTERISK, cChar);
+		}
 		else if(cChar == '\"')
 		{
 			this->NextToken = new CToken(TOKEN_QUOTE, cChar);
@@ -369,15 +374,39 @@ public:
 		case TOKEN_FORWARD_SLASH:
 			Token = this->ByteTokenizer->Next();
 
-			if(Token->GetToken() != TOKEN_FORWARD_SLASH)
-			{
-				throw "expected comment string";
+			// Token should be another slash or asterisk
+			if ( ( Token->GetToken() == TOKEN_FORWARD_SLASH ) || ( Token->GetToken() == TOKEN_ASTERISK ) ){}
+			else {
+				throw "expected slash or asterisk, got a different character instead. correct usage: \"//\" or \"/*\"";
 			}
 
-			do
-			{
-				Token = this->ByteTokenizer->Next("\n");
-			} while(Token->GetToken() == TOKEN_CHAR);
+			// Seek to the next asterisk as that will indicate it's the end of a multi-line comment
+			if ( Token->GetToken() == TOKEN_ASTERISK ) {
+				do {
+					Token = this->ByteTokenizer->Next();
+					if ( Token->GetToken() == TOKEN_EOF ) {
+						throw "expected end of multi-line comment, got end of file instead";
+						break;
+					}
+					else if ( Token->GetToken() == TOKEN_ASTERISK ) {
+						Token = this->ByteTokenizer->Next();
+						if ( Token->GetToken() == TOKEN_FORWARD_SLASH ) {
+							break;
+						}
+					}
+				} while(true);
+
+				//Token = this->ByteTokenizer->Next();
+				//if ( Token->GetToken() != TOKEN_FORWARD_SLASH ) {
+				//	throw "unexpected character after asterisk ending a multi-line comment. correct usage: \"*/\"";
+				//}
+			}
+			else if ( Token->GetToken() == TOKEN_FORWARD_SLASH ) {
+				do
+				{
+					Token = this->ByteTokenizer->Next("\n");
+				} while(Token->GetToken() == TOKEN_CHAR);
+			}
 
 			if(Token->GetToken() == TOKEN_EOF)
 			{
@@ -566,7 +595,7 @@ public:
 	}
 
 private:
-	// Prase a group starting at the first brace and ending at the last.
+	// Parse a group starting at the first brace and ending at the last.
 	vlVoid Parse(CVMTGroupNode *Group)
 	{
 		CToken *Token;
