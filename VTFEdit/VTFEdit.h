@@ -3761,14 +3761,7 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 
 		private: System::Void btnCheckForUpdates_Click(System::Object^ sender, System::EventArgs^ e)
 		{
-			try
-			{
-				this->CheckForUpdates();
-			}
-			catch (Exception^)
-			{
-
-			}
+			this->CheckForUpdates();
 		}
 
 		private: System::Void numVTFFile_ValueChanged(System::Object ^  sender, System::EventArgs ^  e)
@@ -5177,3 +5170,4 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 
 };
 }
+
