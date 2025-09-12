@@ -194,6 +194,7 @@ namespace VTFEdit
 	private: System::Windows::Forms::MenuItem ^  btnFileMenu;
 	private: System::Windows::Forms::MenuItem ^  btnHelpMenu;
 	private: System::Windows::Forms::MenuItem ^  btnAbout;
+	private: System::Windows::Forms::MenuItem ^ btnCheckForUpdates;
 	private: System::Windows::Forms::Panel^ pnlSidebar2;
 	private: System::Windows::Forms::GroupBox^ grpResources;
 	private: System::Windows::Forms::Button^ btnEditResources;
@@ -306,6 +307,7 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			this->btnCustomAlphaSetter = ( gcnew System::Windows::Forms::MenuItem() );
 			this->btnHelpMenu = ( gcnew System::Windows::Forms::MenuItem() );
 			this->btnAbout = ( gcnew System::Windows::Forms::MenuItem() );
+			this->btnCheckForUpdates = (gcnew System::Windows::Forms::MenuItem());
 			this->btnAutoCreateVMTFile = ( gcnew System::Windows::Forms::MenuItem() );
 			this->btnOptionsSpace1 = ( gcnew System::Windows::Forms::MenuItem() );
 			this->dlgOpenFile = ( gcnew System::Windows::Forms::OpenFileDialog() );
@@ -714,7 +716,9 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			// btnHelpMenu
 			// 
 			this->btnHelpMenu->Index = 5;
-			this->btnHelpMenu->MenuItems->AddRange(gcnew cli::array< System::Windows::Forms::MenuItem ^  >(1) { this->btnAbout });
+			this->btnHelpMenu->MenuItems->AddRange(gcnew cli::array< System::Windows::Forms::MenuItem ^  >(2) { 
+				this->btnAbout, this->btnCheckForUpdates
+			});
 			this->btnHelpMenu->Text = L"&Help";
 			// 
 			// btnAbout
@@ -722,6 +726,12 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			this->btnAbout->Index = 0;
 			this->btnAbout->Text = L"&About";
 			this->btnAbout->Click += gcnew System::EventHandler(this, &CVTFEdit::btnAbout_Click);
+			// 
+			// btnCheckForUpdates
+			// 
+			this->btnCheckForUpdates->Index = 1;
+			this->btnCheckForUpdates->Text = L"&Check For Updates";
+			this->btnCheckForUpdates->Click += gcnew System::EventHandler(this, &CVTFEdit::btnCheckForUpdates_Click);
 			// 
 			// btnAutoCreateVMTFile
 			// 
@@ -3749,6 +3759,18 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			this->About->ShowDialog();
 		}
 
+		private: System::Void btnCheckForUpdates_Click(System::Object^ sender, System::EventArgs^ e)
+		{
+			try
+			{
+				this->CheckForUpdates();
+			}
+			catch (Exception^)
+			{
+
+			}
+		}
+
 		private: System::Void numVTFFile_ValueChanged(System::Object ^  sender, System::EventArgs ^  e)
 		{
 			this->trkFrame->Value = Convert::ToInt32(this->numFrame->Value);
@@ -5140,5 +5162,18 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			}
 			this->UpdateVTFFile();
 		}
+
+		private: System::Void CheckForUpdates() {
+			//!!placeholder will make actual autoupdater later
+			try
+			{
+				System::Diagnostics::Process::Start("https://github.com/Sky-rym/VTFEdit-Reloaded/releases/latest");
+			}
+			catch (Exception^)
+			{
+
+			}
+		}
+
 };
 }
