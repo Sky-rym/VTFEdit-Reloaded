@@ -40,8 +40,8 @@ namespace VTFEdit
 	public ref class CVTFEdit : public System::Windows::Forms::Form
 	{
 	public:
-		bool bWarnings;
-		bool bNotificationSounds;
+		bool bWarnings = true;
+		bool bNotificationSounds = true;
 	private:
 		System::String ^sFileName;
 
@@ -690,12 +690,14 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 			this->btnWarnings->Index = 0;
 			this->btnWarnings->Text = L"&Warning Popups";
 			this->btnWarnings->Click += gcnew System::EventHandler(this, &CVTFEdit::btnWarnings_Click);
+			this->btnWarnings->Checked = true;
 			// 
 			// btnNotifSounds
 			// 
 			this->btnNotifSounds->Index = 1;
 			this->btnNotifSounds->Text = L"Notification &Sounds";
 			this->btnNotifSounds->Click += gcnew System::EventHandler(this, &CVTFEdit::btnNotifSounds_Click);
+			this->btnNotifSounds->Checked = true;
 			// 
 			// btnCustomAlphaToggle
 			// 
