@@ -5158,6 +5158,7 @@ private: System::Windows::Forms::MenuItem ^btnOptions;
 
 		private: System::Void CheckForUpdates() {
 			//!!placeholder will make actual autoupdater later
+			// ^^ actually fuck my chungus life i hate networking on c++ just download it bruh lmao
 			try
 			{
 				System::Diagnostics::Process::Start("https://github.com/Sky-rym/VTFEdit-Reloaded/releases/latest");
