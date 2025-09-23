@@ -1,0 +1,3 @@
+[submodule "thirdparty/include/sourcepp"]
+	path = thirdparty/include/sourcepp
+	url = https://github.com/craftablescience/sourcepp.git
