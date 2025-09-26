@@ -73,6 +73,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\include</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
@@ -237,12 +240,6 @@ copy "$(SolutionDir)..\..\thirdparty\bin\DevIL.dll" "$(TargetDir)"
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VTFEdit.CWADConvert.resources</LogicalName>
       <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VTFEdit.CWADConvert.resources</LogicalName>
     </EmbeddedResource> -->
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VTFLib\VTFLib.vcxproj">
-      <Project>{a10bff3f-9c4b-4999-b56c-b9280bb4fda9}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\..\VTFEdit\windows_default.manifest" />

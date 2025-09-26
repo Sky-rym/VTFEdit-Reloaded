@@ -59,7 +59,7 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     add_compile_definitions(
         WIN32
         _WIN64
-        _DEBUG
+        $<$<CONFIG:Debug>:_DEBUG>
         _WINDOWS
         _USRDLL
         VTFLIB_EXPORTS

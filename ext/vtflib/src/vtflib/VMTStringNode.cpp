@@ -9,7 +9,7 @@
  * version.
  */
 
-#include "VMTStringNode.h"
+#include <vtflib/VMTStringNode.h>
 
 using namespace VTFLib::Nodes;
 
