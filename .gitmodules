@@ -1,3 +1,6 @@
 [submodule "thirdparty/include/sourcepp"]
 	path = thirdparty/include/sourcepp
 	url = https://github.com/craftablescience/sourcepp.git
+[submodule "cmake/helpers"]
+	path = cmake/helpers
+	url = https://github.com/craftablescience/cmake-helpers.git

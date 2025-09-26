@@ -16,10 +16,10 @@
 #include "VTFDXTn.h"
 #include "VTFMathlib.h"
 
-#include "Compressonator.h"
+#include "..\ext\vtflib\ext\compressonatorOLD\include\Compressonator.h"
 
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image_resize2.h"
+#include "..\ext\vtflib\ext\stb\include\stb_image_resize2.h"
 
 using namespace VTFLib;
 using namespace std;
