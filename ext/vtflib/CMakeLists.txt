@@ -6,7 +6,7 @@ project(vtflib
         DESCRIPTION "A Valve VTF and VMT image format programming library."
         HOMEPAGE_URL "github.com/misyltoad/VTFLib")
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # Add scripts
