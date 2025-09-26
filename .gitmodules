@@ -4,3 +4,6 @@
 [submodule "cmake/helpers"]
 	path = cmake/helpers
 	url = https://github.com/craftablescience/cmake-helpers.git
+[submodule "ext/vtflib/ext/compressonator"]
+	path = ext/vtflib/ext/compressonator
+	url = https://github.com/craftablescience/compressonator.git
