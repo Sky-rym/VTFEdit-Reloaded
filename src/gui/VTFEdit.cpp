@@ -24,7 +24,7 @@
 #using <mscorlib.dll>
 using namespace System;
 
-#include "stdafx.h"
+#include "../common/stdafx.h"
 #include "VTFEdit.h"
 
 [STAThread]

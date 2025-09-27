@@ -1,2 +1,2 @@
-#include "stdafx.h"
+#include "../common/stdafx.h"
 #include "VTFResources.h"

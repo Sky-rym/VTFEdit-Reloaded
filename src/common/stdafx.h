@@ -1,5 +1,5 @@
 /*
- * VTFCmd
+ * VTFEdit
  * Copyright (C) 2005-2010 Neil Jedrzejewski & Ryan Gregg
  *
  * This program is free software; you can redistribute it and/or
@@ -17,8 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef STDAFX_H
-#define STDAFX_H
+#pragma once
 
 #if _MSC_VER >= 1400
 #	define _CRT_SECURE_NO_WARNINGS
@@ -26,14 +25,16 @@
 #endif
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>			// For FindFirstFile()
 
-#include <malloc.h>
+#include <windows.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+#include <richedit.h>
 
-#include "..\lib\VTFLib.h"
+#include "..\..\include\vtflib\VTFLib.h"
 #ifdef _DEBUG
 #	ifdef _WIN64
 #		pragma comment(lib, "../VTFLib/x64/Debug/VTFLib.lib")
@@ -48,7 +49,29 @@
 #	endif
 #endif
 
-#include "IL\il.h"
-#pragma comment(lib, "DevIL.lib")
+ // Re-enable if Wad conversion is fixed as HLLib is only used for that purpose in this program.
+ //#include "..\lib\HLLib.h"
+//#ifdef _WIN64
+//#	pragma comment(lib, "..\\..\\..\\lib\\x64\\HLLib.lib")
+//#else
+//#	pragma comment(lib, "..\\..\\..\\lib\\x86\\HLLib.lib")
+//#endif
 
+#include <il.h>
+#pragma comment(lib, "..\\..\\ext\\IL\\lib\\win_x86_64\\DevIL.lib")
+
+#ifdef CreateDirectory
+#undef CreateDirectory
+#endif
+
+#ifdef GetObject
+#undef GetObject
+#endif
+
+#ifdef GetTempPath
+#undef GetTempPath
+#endif
+
+#ifdef MessageBox
+#undef MessageBox
 #endif

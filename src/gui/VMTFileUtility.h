@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "stdafx.h"
+#include "../common/stdafx.h"
 
 using namespace System;
 using namespace System::Text::RegularExpressions;

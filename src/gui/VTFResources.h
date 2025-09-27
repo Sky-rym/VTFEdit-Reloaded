@@ -26,7 +26,7 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 
-#include "stdafx.h"
+#include "../common/stdafx.h"
 
 namespace VTFEdit
 {

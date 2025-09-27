@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "stdafx.h"
+#include "../common/stdafx.h"
 #include "VTFOptions.h"
 #include "VMTCreate.h"
 #include "VMTFileUtility.h"

@@ -8,5 +8,5 @@
 	path = ext/vtflib/ext/compressonator
 	url = https://github.com/craftablescience/compressonator.git
 [submodule "ext/include/sourcepp"]
-	path = ext/include/sourcepp
+	path = ext/sourcepp
 	url = https://github.com/craftablescience/sourcepp.git
