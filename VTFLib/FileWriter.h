@@ -24,11 +24,11 @@ namespace VTFLib
 			class CFileWriter : public IWriter
 			{
 			private:
-				HANDLE hFile;
-				vlChar *cFileName;
+				FILE* hFile;
+				vlChar* cFileName;
 
 			public:
-				CFileWriter(const vlChar *cFileName);
+				CFileWriter(const vlChar* cFileName);
 				~CFileWriter();
 
 			public:
@@ -38,12 +38,11 @@ namespace VTFLib
 				virtual vlVoid Close();
 
 				virtual vlUInt GetStreamSize() const;
-				virtual vlUInt GetStreamPointer() const;
 
 				virtual vlUInt Seek(vlLong lOffset, vlUInt uiMode);
 
 				virtual vlBool Write(vlChar cChar);
-				virtual vlUInt Write(vlVoid *vData, vlUInt uiBytes);
+				virtual vlUInt Write(vlVoid* vData, vlUInt uiBytes);
 			};
 		}
 	}

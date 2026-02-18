@@ -24,11 +24,11 @@ namespace VTFLib
 			class CFileReader : public IReader
 			{
 			private:
-				HANDLE hFile;
-				vlChar *cFileName;
+				FILE* hFile;
+				vlChar* cFileName;
 
 			public:
-				CFileReader(const vlChar *cFileName);
+				CFileReader(const vlChar* cFileName);
 				~CFileReader();
 
 			public:
@@ -37,13 +37,15 @@ namespace VTFLib
 				virtual vlBool Open();
 				virtual vlVoid Close();
 
+				// Returns the size of the file that's currently opened
 				virtual vlUInt GetStreamSize() const;
-				virtual vlUInt GetStreamPointer() const;
 
+				// uiMode must be one of the C stdio seek types- SEEK_SET, SEEK_END, etc
 				virtual vlUInt Seek(vlLong lOffset, vlUInt uiMode);
 
-				virtual vlBool Read(vlChar &cChar);
-				virtual vlUInt Read(vlVoid *vData, vlUInt uiBytes);
+				// Read a single char from the file, returns true if read OK
+				virtual vlBool Read(vlChar& cChar);
+				virtual vlUInt Read(vlVoid* vData, vlUInt uiBytes);
 			};
 		}
 	}

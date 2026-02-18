@@ -29,12 +29,11 @@ namespace VTFLib
 				virtual vlVoid Close() = 0;
 
 				virtual vlUInt GetStreamSize() const = 0;
-				virtual vlUInt GetStreamPointer() const = 0;
 
 				virtual vlUInt Seek(vlLong lOffset, vlUInt uiMode) = 0;
 
-				virtual vlBool Read(vlChar &cChar) = 0;
-				virtual vlUInt Read(vlVoid *vData, vlUInt uiBytes) = 0;
+				virtual vlBool Read(vlChar& cChar) = 0;
+				virtual vlUInt Read(vlVoid* vData, vlUInt uiBytes) = 0;
 			};
 		}
 	}

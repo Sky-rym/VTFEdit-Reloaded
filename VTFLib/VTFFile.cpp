@@ -24,6 +24,10 @@
 using namespace VTFLib;
 using namespace std;
 
+// Conflicts with STL
+#undef min
+#undef max
+
 // Class construction
 // ------------------
 CVTFFile::CVTFFile()
@@ -643,8 +647,8 @@ vlBool CVTFFile::Create(vlUInt uiWidth, vlUInt uiHeight, vlUInt uiFrames, vlUInt
 
 						for (vlUInt m = 1; m < this->Header->MipCount; m++)
 						{
-							vlUShort usWidth  = max(1u, this->Header->Width  >> m);
-							vlUShort usHeight = max(1u, this->Header->Height >> m);
+							vlUShort usWidth  = std::max(1, this->Header->Width  >> m);
+							vlUShort usHeight = std::max(1, this->Header->Height >> m);
 
 							if (!stbir_resize(
 								pSource, this->Header->Width, this->Header->Height, 0,
@@ -943,7 +947,7 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 			throw 0;
 		}
 
-		Reader->Seek(0, FILE_BEGIN);
+		Reader->Seek(0, SEEK_SET);
 
 		this->Header = new SVTFHeader;
 		memset(this->Header, 0, sizeof(SVTFHeader));
@@ -1030,7 +1034,7 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 						}
 
 						vlUInt uiSize = 0;
-						Reader->Seek(this->Header->Resources[i].Data, FILE_BEGIN);
+						Reader->Seek(this->Header->Resources[i].Data, SEEK_SET);
 						if(Reader->Read(&uiSize, sizeof(vlUInt)) != sizeof(vlUInt))
 						{
 							throw 0;
@@ -1078,7 +1082,7 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 			this->lpThumbnailImageData = new vlByte[this->uiThumbnailBufferSize];
 
 			// load the low res data
-			Reader->Seek(uiThumbnailBufferOffset, FILE_BEGIN);
+			Reader->Seek(uiThumbnailBufferOffset, SEEK_SET);
 			if(Reader->Read(this->lpThumbnailImageData, this->uiThumbnailBufferSize) != this->uiThumbnailBufferSize)
 			{
 				throw 0;
@@ -1095,7 +1099,7 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 			this->lpImageData = new vlByte[this->uiImageBufferSize];
 
 			// load the high-res data
-			Reader->Seek(uiImageDataOffset, FILE_BEGIN);
+			Reader->Seek(uiImageDataOffset, SEEK_SET);
 			if(Reader->Read(this->lpImageData, this->uiImageBufferSize) != this->uiImageBufferSize)
 			{
 				throw 0;
@@ -3040,7 +3044,7 @@ vlUInt16 FP16ToUnorm(vlUInt16 uiValue)
 	sValue *= sFP16HDRExposure;
 	sValue = Reinhard(sValue);
 	sValue *= 65535.0f;
-	sValue = min(max(sValue, 0.0f), 65535.0f);
+	sValue = std::min(std::max(sValue, 0.0f), 65535.0f);
 	return (vlUInt16) sValue;
 }
 
@@ -3300,13 +3304,13 @@ vlBool ConvertTemplated(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUInt
 			//Clamp rgb values to prevent artifacting
 			vlUInt16 modifier = SA * 16;
 			SR = (SR * modifier) / HDR_EXPOSURE;
-			SR = min(max(0, SR), 255);
+			SR = (std::min)((std::max)((vlUInt16)0, SR), (vlUInt16)255);
 
 			SG = (SG * modifier) / HDR_EXPOSURE;
-			SG = min(max(0, SG), 255);
+			SG = (std::min)((std::max)((vlUInt16)0, SG), (vlUInt16)255);
 
 			SB = (SB * modifier) / HDR_EXPOSURE;
-			SB = min(max(0, SB), 255);
+			SB = (std::min)((std::max)((vlUInt16)0, SB), (vlUInt16)255);
 
 			SA = ~0;
 		}

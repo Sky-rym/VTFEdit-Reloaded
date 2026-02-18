@@ -19,43 +19,43 @@
 extern "C" {
 #endif
 
-typedef enum tagVLProc
-{
-	PROC_READ_CLOSE = 0,
-	PROC_READ_OPEN,
-	PROC_READ_READ,
-	PROC_READ_SEEK,
-	PROC_READ_TELL,
-	PROC_READ_SIZE,
-	PROC_WRITE_CLOSE,
-	PROC_WRITE_OPEN,
-	PROC_WRITE_WRITE,
-	PROC_WRITE_SEEK,
-	PROC_WRITE_SIZE,
-	PROC_WRITE_TELL,
-	PROC_COUNT
-} VLProc;
+	typedef enum tagVLProc
+	{
+		PROC_READ_CLOSE = 0,
+		PROC_READ_OPEN,
+		PROC_READ_READ,
+		PROC_READ_SEEK,
+		PROC_READ_TELL,
+		PROC_READ_SIZE,
+		PROC_WRITE_CLOSE,
+		PROC_WRITE_OPEN,
+		PROC_WRITE_WRITE,
+		PROC_WRITE_SEEK,
+		PROC_WRITE_SIZE,
+		PROC_WRITE_TELL,
+		PROC_COUNT
+	} VLProc;
 
-typedef enum tagVLSeekMode
-{
-	SEEK_MODE_BEGIN = 0,
-	SEEK_MODE_CURRENT,
-	SEEK_MODE_END
-} VLSeekMode;
+	typedef enum tagVLSeekMode
+	{
+		SEEK_MODE_BEGIN = 0,
+		SEEK_MODE_CURRENT,
+		SEEK_MODE_END
+	} VLSeekMode;
 
-typedef vlVoid (*PReadCloseProc)(vlVoid *);
-typedef vlBool (*PReadOpenProc) (vlVoid *);
-typedef vlUInt (*PReadReadProc)  (vlVoid *, vlUInt, vlVoid *);
-typedef vlUInt (*PReadSeekProc) (vlLong, VLSeekMode, vlVoid *);
-typedef vlUInt (*PReadSizeProc) (vlVoid *);
-typedef vlUInt (*PReadTellProc) (vlVoid *);
+	typedef vlVoid(*PReadCloseProc)(vlVoid*);
+	typedef vlBool(*PReadOpenProc) (vlVoid*);
+	typedef vlUInt(*PReadReadProc)  (vlVoid*, vlUInt, vlVoid*);
+	typedef vlUInt(*PReadSeekProc) (vlLong, VLSeekMode, vlVoid*);
+	typedef vlUInt(*PReadSizeProc) (vlVoid*);
+	typedef vlUInt(*PReadTellProc) (vlVoid*);
 
-typedef vlVoid (*PWriteCloseProc)(vlVoid *);
-typedef vlBool (*PWriteOpenProc) (vlVoid *);
-typedef vlUInt (*PWriteWriteProc)  (vlVoid *, vlUInt, vlVoid *);
-typedef vlUInt (*PWriteSeekProc) (vlLong, VLSeekMode, vlVoid *);
-typedef vlUInt (*PWriteSizeProc) (vlVoid *);
-typedef vlUInt (*PWriteTellProc) (vlVoid *);
+	typedef vlVoid(*PWriteCloseProc)(vlVoid*);
+	typedef vlBool(*PWriteOpenProc) (vlVoid*);
+	typedef vlUInt(*PWriteWriteProc)  (vlVoid*, vlUInt, vlVoid*);
+	typedef vlUInt(*PWriteSeekProc) (vlLong, VLSeekMode, vlVoid*);
+	typedef vlUInt(*PWriteSizeProc) (vlVoid*);
+	typedef vlUInt(*PWriteTellProc) (vlVoid*);
 
 #ifdef __cplusplus
 }
@@ -82,8 +82,8 @@ namespace VTFLib
 extern "C" {
 #endif
 
-VTFLIB_API vlVoid vlSetProc(VLProc Proc, vlVoid *pProc);
-VTFLIB_API vlVoid *vlGetProc(VLProc Proc);
+	VTFLIB_API vlVoid vlSetProc(VLProc Proc, vlVoid* pProc);
+	VTFLIB_API vlVoid* vlGetProc(VLProc Proc);
 
 #ifdef __cplusplus
 }

@@ -26,14 +26,14 @@ namespace VTFLib
 			private:
 				vlBool bOpened;
 
-				vlVoid *vData;
+				vlVoid* vData;
 				vlUInt uiBufferSize;
 
 				vlUInt uiPointer;
 				vlUInt uiLength;
 
 			public:
-				CMemoryWriter(vlVoid *vData, vlUInt uiBufferSize);
+				CMemoryWriter(vlVoid* vData, vlUInt uiBufferSize);
 				~CMemoryWriter();
 
 			public:
@@ -48,7 +48,7 @@ namespace VTFLib
 				virtual vlUInt Seek(vlLong lOffset, vlUInt uiMode);
 
 				virtual vlBool Write(vlChar cChar);
-				virtual vlUInt Write(vlVoid *vData, vlUInt uiBytes);
+				virtual vlUInt Write(vlVoid* vData, vlUInt uiBytes);
 			};
 		}
 	}

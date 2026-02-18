@@ -26,13 +26,13 @@ namespace VTFLib
 			private:
 				vlBool bOpened;
 
-				const vlVoid *vData;
+				const vlVoid* vData;
 				vlUInt uiBufferSize;
 
 				vlUInt uiPointer;
 
 			public:
-				CMemoryReader(const vlVoid *vData, vlUInt uiBufferSize);
+				CMemoryReader(const vlVoid* vData, vlUInt uiBufferSize);
 				~CMemoryReader();
 
 			public:
@@ -46,8 +46,8 @@ namespace VTFLib
 
 				virtual vlUInt Seek(vlLong lOffset, vlUInt uiMode);
 
-				virtual vlBool Read(vlChar &cChar);
-				virtual vlUInt Read(vlVoid *vData, vlUInt uiBytes);
+				virtual vlBool Read(vlChar& cChar);
+				virtual vlUInt Read(vlVoid* vData, vlUInt uiBytes);
 			};
 		}
 	}

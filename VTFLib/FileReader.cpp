@@ -15,7 +15,7 @@
 using namespace VTFLib;
 using namespace VTFLib::IO::Readers;
 
-CFileReader::CFileReader(const vlChar *cFileName)
+CFileReader::CFileReader(const vlChar* cFileName)
 {
 	this->hFile = NULL;
 
@@ -27,7 +27,7 @@ CFileReader::~CFileReader()
 {
 	this->Close();
 
-	delete []this->cFileName;
+	delete[]this->cFileName;
 }
 
 vlBool CFileReader::Opened() const
@@ -39,9 +39,9 @@ vlBool CFileReader::Open()
 {
 	this->Close();
 
-	this->hFile = CreateFile(this->cFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	this->hFile = fopen(this->cFileName, "rb"); // CreateFile(this->cFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if(this->hFile == INVALID_HANDLE_VALUE)
+	if (!this->hFile)
 	{
 		this->hFile = NULL;
 
@@ -55,73 +55,68 @@ vlBool CFileReader::Open()
 
 vlVoid CFileReader::Close()
 {
-	if(this->hFile != NULL)
+	if (this->hFile != NULL)
 	{
-		CloseHandle(this->hFile);
+		fclose(this->hFile);
 		this->hFile = NULL;
 	}
 }
 
 vlUInt CFileReader::GetStreamSize() const
 {
-	if(this->hFile == NULL)
+	if (this->hFile == NULL)
 	{
 		return 0;
 	}
 
-	return GetFileSize(this->hFile, NULL);
-}
-
-vlUInt CFileReader::GetStreamPointer() const
-{
-	if(this->hFile == NULL)
-	{
-		return 0;
-	}
-
-	return (vlUInt)SetFilePointer(this->hFile, 0, NULL, FILE_CURRENT);
+	long oldpos = ftell(this->hFile);
+	fseek(this->hFile, 0, SEEK_END);
+	long pos = ftell(this->hFile);
+	fseek(this->hFile, oldpos, SEEK_SET);
+	return pos;
 }
 
 vlUInt CFileReader::Seek(vlLong lOffset, vlUInt uiMode)
 {
-	if(this->hFile == NULL)
+	if (this->hFile == NULL)
 	{
 		return 0;
 	}
 
-	return (vlUInt)SetFilePointer(this->hFile, lOffset, NULL, uiMode);
+	fseek(this->hFile, lOffset, uiMode);
+	return ftell(this->hFile);
 }
 
-vlBool CFileReader::Read(vlChar &cChar)
+vlBool CFileReader::Read(vlChar& cChar)
 {
-	if(this->hFile == NULL)
+	if (this->hFile == NULL)
 	{
 		return vlFalse;
 	}
 
-	vlULong ulBytesRead = 0;
+	size_t numRead = fread(&cChar, sizeof(vlChar), 1, this->hFile);
 
-	if(!ReadFile(this->hFile, &cChar, 1, &ulBytesRead, NULL))
+	if (numRead != 1)
 	{
-		LastError.Set("ReadFile() failed.", vlTrue);
+		LastError.Set("fread() failed.", vlTrue);
 	}
 
-	return ulBytesRead == 1;
+	return numRead == 1;
 }
 
-vlUInt CFileReader::Read(vlVoid *vData, vlUInt uiBytes)
+vlUInt CFileReader::Read(vlVoid* vData, vlUInt uiBytes)
 {
-	if(this->hFile == NULL)
+	if (this->hFile == NULL)
 	{
 		return 0;
 	}
 
-	vlULong ulBytesRead = 0;
+	size_t numRead = fread(vData, uiBytes, 1, this->hFile);
 
-	if(!ReadFile(this->hFile, vData, uiBytes, &ulBytesRead, NULL))
+	if (numRead != 1)
 	{
-		LastError.Set("ReadFile() failed.", vlTrue);
+		LastError.Set("fread() failed.", vlTrue);
 	}
 
-	return (vlUInt)ulBytesRead;
+	return numRead * uiBytes;
 }

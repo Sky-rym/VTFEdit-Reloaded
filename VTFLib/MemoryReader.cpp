@@ -15,7 +15,7 @@
 using namespace VTFLib;
 using namespace VTFLib::IO::Readers;
 
-CMemoryReader::CMemoryReader(const vlVoid *vData, vlUInt uiBufferSize)
+CMemoryReader::CMemoryReader(const vlVoid* vData, vlUInt uiBufferSize)
 {
 	this->bOpened = vlFalse;
 	this->uiPointer = 0;
@@ -36,7 +36,7 @@ vlBool CMemoryReader::Opened() const
 
 vlBool CMemoryReader::Open()
 {
-	if(vData == 0)
+	if (vData == 0)
 	{
 		LastError.Set("Memory stream is null.");
 		return vlFalse;
@@ -56,7 +56,7 @@ vlVoid CMemoryReader::Close()
 
 vlUInt CMemoryReader::GetStreamSize() const
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
@@ -66,7 +66,7 @@ vlUInt CMemoryReader::GetStreamSize() const
 
 vlUInt CMemoryReader::GetStreamPointer() const
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
@@ -76,32 +76,32 @@ vlUInt CMemoryReader::GetStreamPointer() const
 
 vlUInt CMemoryReader::Seek(vlLong lOffset, vlUInt uiMode)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
 
-	switch(uiMode)
+	switch (uiMode)
 	{
-		case FILE_BEGIN:
-			this->uiPointer = 0;
-			break;
-		case FILE_CURRENT:
+	case SEEK_SET:
+		this->uiPointer = 0;
+		break;
+	case SEEK_CUR:
 
-			break;
-		case FILE_END:
-			this->uiPointer = this->uiBufferSize;
-			break;
+		break;
+	case SEEK_END:
+		this->uiPointer = this->uiBufferSize;
+		break;
 	}
 
 	vlLong lPointer = (vlLong)this->uiPointer + lOffset;
 
-	if(lPointer < 0)
+	if (lPointer < 0)
 	{
 		lPointer = 0;
 	}
 
-	if(lPointer > (vlLong)this->uiBufferSize)
+	if (lPointer > (vlLong)this->uiBufferSize)
 	{
 		lPointer = (vlLong)this->uiBufferSize;
 	}
@@ -111,14 +111,14 @@ vlUInt CMemoryReader::Seek(vlLong lOffset, vlUInt uiMode)
 	return this->uiPointer;
 }
 
-vlBool CMemoryReader::Read(vlChar &cChar)
+vlBool CMemoryReader::Read(vlChar& cChar)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return vlFalse;
 	}
 
-	if(this->uiPointer == this->uiBufferSize)
+	if (this->uiPointer == this->uiBufferSize)
 	{
 		LastError.Set("End of memory stream.");
 
@@ -126,28 +126,28 @@ vlBool CMemoryReader::Read(vlChar &cChar)
 	}
 	else
 	{
-		cChar = *((vlChar *)this->vData + this->uiPointer++);
+		cChar = *((vlChar*)this->vData + this->uiPointer++);
 
 		return vlTrue;
 	}
 }
 
-vlUInt CMemoryReader::Read(vlVoid *vData, vlUInt uiBytes)
+vlUInt CMemoryReader::Read(vlVoid* vData, vlUInt uiBytes)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
 
-	if(this->uiPointer == this->uiBufferSize)
+	if (this->uiPointer == this->uiBufferSize)
 	{
 		return 0;
 	}
-	else if(this->uiPointer + uiBytes > this->uiBufferSize) // This right?
+	else if (this->uiPointer + uiBytes > this->uiBufferSize) // This right?
 	{
 		uiBytes = this->uiBufferSize - this->uiPointer;
 
-		memcpy(vData, (vlByte *)this->vData + this->uiPointer, uiBytes);
+		memcpy(vData, (vlByte*)this->vData + this->uiPointer, uiBytes);
 
 		this->uiPointer = this->uiBufferSize;
 
@@ -157,7 +157,7 @@ vlUInt CMemoryReader::Read(vlVoid *vData, vlUInt uiBytes)
 	}
 	else
 	{
-		memcpy(vData, (vlByte *)this->vData + this->uiPointer, uiBytes);
+		memcpy(vData, (vlByte*)this->vData + this->uiPointer, uiBytes);
 
 		this->uiPointer += uiBytes;
 

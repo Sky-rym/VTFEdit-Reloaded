@@ -15,7 +15,7 @@
 using namespace VTFLib;
 using namespace VTFLib::IO::Writers;
 
-CMemoryWriter::CMemoryWriter(vlVoid *vData, vlUInt uiBufferSize)
+CMemoryWriter::CMemoryWriter(vlVoid* vData, vlUInt uiBufferSize)
 {
 	this->bOpened = vlFalse;
 
@@ -38,7 +38,7 @@ vlBool CMemoryWriter::Opened() const
 
 vlBool CMemoryWriter::Open()
 {
-	if(vData == 0)
+	if (vData == 0)
 	{
 		LastError.Set("Memory stream is null.");
 		return vlFalse;
@@ -69,7 +69,7 @@ vlUInt CMemoryWriter::GetStreamSize() const
 
 vlUInt CMemoryWriter::GetStreamPointer() const
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
@@ -79,32 +79,32 @@ vlUInt CMemoryWriter::GetStreamPointer() const
 
 vlUInt CMemoryWriter::Seek(vlLong lOffset, vlUInt uiMode)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
 
-	switch(uiMode)
+	switch (uiMode)
 	{
-		case FILE_BEGIN:
-			this->uiPointer = 0;
-			break;
-		case FILE_CURRENT:
+	case SEEK_SET:
+		this->uiPointer = 0;
+		break;
+	case SEEK_CUR:
 
-			break;
-		case FILE_END:
-			this->uiPointer = this->uiLength;
-			break;
+		break;
+	case SEEK_END:
+		this->uiPointer = this->uiLength;
+		break;
 	}
 
 	vlLong lPointer = (vlLong)this->uiPointer + lOffset;
 
-	if(lPointer < 0)
+	if (lPointer < 0)
 	{
 		lPointer = 0;
 	}
 
-	if(lPointer > (vlLong)this->uiLength)
+	if (lPointer > (vlLong)this->uiLength)
 	{
 		lPointer = (vlLong)this->uiLength;
 	}
@@ -116,12 +116,12 @@ vlUInt CMemoryWriter::Seek(vlLong lOffset, vlUInt uiMode)
 
 vlBool CMemoryWriter::Write(vlChar cChar)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return vlFalse;
 	}
 
-	if(this->uiPointer == this->uiBufferSize)
+	if (this->uiPointer == this->uiBufferSize)
 	{
 		LastError.Set("End of memory stream.");
 
@@ -129,7 +129,7 @@ vlBool CMemoryWriter::Write(vlChar cChar)
 	}
 	else
 	{
-		*((vlChar *)this->vData + this->uiPointer++) = cChar;
+		*((vlChar*)this->vData + this->uiPointer++) = cChar;
 
 		this->uiLength++;
 
@@ -137,22 +137,22 @@ vlBool CMemoryWriter::Write(vlChar cChar)
 	}
 }
 
-vlUInt CMemoryWriter::Write(vlVoid *vData, vlUInt uiBytes)
+vlUInt CMemoryWriter::Write(vlVoid* vData, vlUInt uiBytes)
 {
-	if(!this->bOpened)
+	if (!this->bOpened)
 	{
 		return 0;
 	}
 
-	if(this->uiPointer == this->uiBufferSize)
+	if (this->uiPointer == this->uiBufferSize)
 	{
 		return 0;
 	}
-	else if(this->uiPointer + uiBytes > this->uiBufferSize)
+	else if (this->uiPointer + uiBytes > this->uiBufferSize)
 	{
 		uiBytes = this->uiBufferSize - this->uiPointer;
 
-		memcpy((vlByte *)this->vData + this->uiPointer, vData, uiBytes);
+		memcpy((vlByte*)this->vData + this->uiPointer, vData, uiBytes);
 
 		this->uiLength += uiBytes;
 
@@ -164,7 +164,7 @@ vlUInt CMemoryWriter::Write(vlVoid *vData, vlUInt uiBytes)
 	}
 	else
 	{
-		memcpy((vlByte *)this->vData + this->uiPointer, vData, uiBytes);
+		memcpy((vlByte*)this->vData + this->uiPointer, vData, uiBytes);
 
 		this->uiLength += uiBytes;
 

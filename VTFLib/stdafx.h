@@ -26,6 +26,8 @@
 #	define VTFLIB_API __declspec(dllimport)
 #endif
 
+#include <cstdint>
+
 // Custom data types
 typedef unsigned char	vlBool;				//!< Boolean value 0/1.
 typedef char			vlChar;				//!< Single signed character.
@@ -40,10 +42,10 @@ typedef float			vlSingle;			//!< Floating point number
 typedef double			vlDouble;			//!< Double number
 typedef void			vlVoid;				//!< Void value.
 
-typedef unsigned __int8		vlUInt8;
-typedef unsigned __int16	vlUInt16;
-typedef unsigned __int32	vlUInt32;
-typedef unsigned __int64	vlUInt64;
+typedef std::uint8_t	vlUInt8;
+typedef std::uint16_t	vlUInt16;
+typedef std::uint32_t	vlUInt32;
+typedef std::uint64_t	vlUInt64;
 
 typedef vlSingle		vlFloat;			//!< Floating point number (same as vlSingled).
 
@@ -62,6 +64,10 @@ typedef vlSingle		vlFloat;			//!< Floating point number (same as vlSingled).
 #include <assert.h>
 #include <math.h>
 #include <stdarg.h>
+#include <string.h>
+#include <memory.h>
+#include <ctype.h>
+#include <cstring>
 
 #if _MSC_VER >= 1600 // Visual Studio 2010
 #	define STATIC_ASSERT(condition, message) static_assert(condition, message)

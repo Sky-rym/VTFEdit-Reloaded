@@ -30,9 +30,9 @@ namespace VTFLib
 	PWriteTellProc pWriteTellProc = 0;
 }
 
-VTFLIB_API vlVoid vlSetProc(VLProc Proc, vlVoid *pProc)
+VTFLIB_API vlVoid vlSetProc(VLProc Proc, vlVoid* pProc)
 {
-	switch(Proc)
+	switch (Proc)
 	{
 	case PROC_READ_CLOSE:
 		pReadCloseProc = (PReadCloseProc)pProc;
@@ -73,34 +73,34 @@ VTFLIB_API vlVoid vlSetProc(VLProc Proc, vlVoid *pProc)
 	}
 }
 
-VTFLIB_API vlVoid *vlGetProc(VLProc Proc)
+VTFLIB_API vlVoid* vlGetProc(VLProc Proc)
 {
-	switch(Proc)
+	switch (Proc)
 	{
 	case PROC_READ_CLOSE:
-		return pReadCloseProc;
+		return (vlVoid*)pReadCloseProc;
 	case PROC_READ_OPEN:
-		return pReadOpenProc;
+		return (vlVoid*)pReadOpenProc;
 	case PROC_READ_READ:
-		return pReadReadProc;
+		return (vlVoid*)pReadReadProc;
 	case PROC_READ_SEEK:
-		return pReadSeekProc;
+		return (vlVoid*)pReadSeekProc;
 	case PROC_READ_SIZE:
-		return pReadSizeProc;
+		return (vlVoid*)pReadSizeProc;
 	case PROC_READ_TELL:
-		return pReadTellProc;
+		return (vlVoid*)pReadTellProc;
 	case PROC_WRITE_CLOSE:
-		return pWriteCloseProc;
+		return (vlVoid*)pWriteCloseProc;
 	case PROC_WRITE_OPEN:
-		return pWriteOpenProc;
+		return (vlVoid*)pWriteOpenProc;
 	case PROC_WRITE_WRITE:
-		return pWriteWriteProc;
+		return (vlVoid*)pWriteWriteProc;
 	case PROC_WRITE_SEEK:
-		return pWriteSeekProc;
+		return (vlVoid*)pWriteSeekProc;
 	case PROC_WRITE_SIZE:
-		return pWriteSizeProc;
+		return (vlVoid*)pWriteSizeProc;
 	case PROC_WRITE_TELL:
-		return pWriteTellProc;
+		return (vlVoid*)pWriteTellProc;
 	default:
 		return 0;
 	}
