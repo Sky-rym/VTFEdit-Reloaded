@@ -28,6 +28,20 @@ using namespace System::Drawing;
 
 #include "stdafx.h"
 
+public ref class FmtItem
+{
+public:
+	System::String^ Name;
+	int Value;
+
+	FmtItem(System::String^ name, int value) : Name(name), Value(value) {}
+
+	virtual System::String^ ToString() override
+	{
+		return Name;
+	}
+};
+
 namespace VTFEdit
 {
 	public ref class CVTFOptions : public System::Windows::Forms::Form
@@ -370,12 +384,38 @@ namespace VTFEdit
 			// 
 			this->cboFormat->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->cboFormat->Font = ( gcnew System::Drawing::Font( L"Microsoft Sans Serif", 8 ) );
-			this->cboFormat->Items->AddRange( gcnew cli::array< System::Object ^  >( 27 ) {
-				L"RGBA8888", L"ABGR8888", L"RGB888", L"BGR888",
-					L"RGB565", L"I8", L"IA88", L"P8 (Not supported)", L"A8", L"RGB888 Bluescreen", L"BGR888 Bluescreen", L"ARGB8888", L"BGRA8888",
-					L"DXT1", L"DXT3", L"DXT5", L"BGRX8888", L"BGR565", L"BGRX5551", L"BGRA4444", L"DXT1 With One Bit Alpha", L"BGRA5551", L"UV88",
-					L"UVWQ8888", L"RGBA16161616F", L"RGBA16161616", L"UVLX8888"
-			} );
+			array<System::Object^>^ fmts = {
+				gcnew FmtItem( L"RGBA8888",					IMAGE_FORMAT_RGBA8888 ),
+				gcnew FmtItem( L"ABGR8888",					IMAGE_FORMAT_ABGR8888 ),
+				gcnew FmtItem( L"RGB888",					IMAGE_FORMAT_RGB888 ),
+				gcnew FmtItem( L"BGR888",					IMAGE_FORMAT_BGR888 ),
+				gcnew FmtItem( L"RGB565",					IMAGE_FORMAT_RGB565 ),
+				gcnew FmtItem( L"I8",						IMAGE_FORMAT_I8 ),
+				gcnew FmtItem( L"IA88",						IMAGE_FORMAT_IA88 ),
+				gcnew FmtItem( L"P8 (Not supported)",		IMAGE_FORMAT_P8 ),
+				gcnew FmtItem( L"A8",						IMAGE_FORMAT_A8 ),
+				gcnew FmtItem( L"RGB888 Bluescreen",		IMAGE_FORMAT_RGB888_BLUESCREEN ),
+				gcnew FmtItem( L"BGR888 Bluescreen",		IMAGE_FORMAT_BGR888_BLUESCREEN ),
+				gcnew FmtItem( L"ARGB8888",					IMAGE_FORMAT_ARGB8888 ),
+				gcnew FmtItem( L"BGRA8888",					IMAGE_FORMAT_BGRA8888 ),
+				gcnew FmtItem( L"DXT1",						IMAGE_FORMAT_DXT1 ),
+				gcnew FmtItem( L"DXT3",						IMAGE_FORMAT_DXT3 ),
+				gcnew FmtItem( L"DXT5",						IMAGE_FORMAT_DXT5 ),
+				gcnew FmtItem( L"BGRX8888",					IMAGE_FORMAT_BGRX8888 ),
+				gcnew FmtItem( L"BGR565",					IMAGE_FORMAT_BGR565 ),
+				gcnew FmtItem( L"BGRX5551",					IMAGE_FORMAT_BGRX5551 ),
+				gcnew FmtItem( L"BGRA4444",					IMAGE_FORMAT_BGRA4444 ),
+				gcnew FmtItem( L"DXT1 With One Bit Alpha",	IMAGE_FORMAT_DXT1_ONEBITALPHA ),
+				gcnew FmtItem( L"BGRA5551",					IMAGE_FORMAT_BGRA5551 ),
+				gcnew FmtItem( L"UV88",						IMAGE_FORMAT_UV88 ),
+				gcnew FmtItem( L"UVWQ8888",					IMAGE_FORMAT_UVWQ8888 ),
+				gcnew FmtItem( L"RGBA16161616F",			IMAGE_FORMAT_RGBA16161616F ),
+				gcnew FmtItem( L"RGBA16161616",				IMAGE_FORMAT_RGBA16161616 ),
+				gcnew FmtItem( L"UVLX8888",					IMAGE_FORMAT_UVLX8888 ),
+				gcnew FmtItem( L"ATI1N",					IMAGE_FORMAT_ATI1N ),
+				gcnew FmtItem( L"ATI2N",					IMAGE_FORMAT_ATI2N )
+			};
+			this->cboFormat->Items->AddRange( fmts );
 			this->cboFormat->Location = System::Drawing::Point( 78, 15 );
 			this->cboFormat->Name = L"cboFormat";
 			this->cboFormat->Size = System::Drawing::Size( 125, 21 );
@@ -455,12 +495,7 @@ namespace VTFEdit
 			// 
 			this->cboAlphaFormat->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->cboAlphaFormat->Font = ( gcnew System::Drawing::Font( L"Microsoft Sans Serif", 8 ) );
-			this->cboAlphaFormat->Items->AddRange( gcnew cli::array< System::Object ^  >( 27 ) {
-				L"RGBA8888", L"ABGR8888", L"RGB888", L"BGR888",
-					L"RGB565", L"I8", L"IA88", L"P8 (Not supported)", L"A8", L"RGB888 Bluescreen", L"BGR888 Bluescreen", L"ARGB8888", L"BGRA8888",
-					L"DXT1", L"DXT3", L"DXT5", L"BGRX8888", L"BGR565", L"BGRX5551", L"BGRA4444", L"DXT1 With One Bit Alpha", L"BGRA5551", L"UV88",
-					L"UVWQ8888", L"RGBA16161616F", L"RGBA16161616", L"UVLX8888"
-			} );
+			this->cboAlphaFormat->Items->AddRange( fmts );
 			this->cboAlphaFormat->Location = System::Drawing::Point( 78, 34 );
 			this->cboAlphaFormat->Name = L"cboAlphaFormat";
 			this->cboAlphaFormat->Size = System::Drawing::Size( 125, 21 );
@@ -1190,14 +1225,17 @@ namespace VTFEdit
 	{
 		VTFImageFormat get()
 		{
-			return (VTFImageFormat)this->cboFormat->SelectedIndex;
+			return (VTFImageFormat)safe_cast<FmtItem^>(this->cboFormat->SelectedItem)->Value;
 		}
 		void set(VTFImageFormat ImageFormat)
 		{
-			int iIndex = Convert::ToInt32(ImageFormat);
-			if (iIndex >= 0 && iIndex < this->cboFormat->Items->Count)
+			for each (FmtItem ^ item in this->cboFormat->Items)
 			{
-				this->cboFormat->SelectedIndex = iIndex;
+				if (item->Value == (int)ImageFormat)
+				{
+					this->cboFormat->SelectedItem = item;
+					return;
+				}
 			}
 		}
 	}
@@ -1206,14 +1244,17 @@ namespace VTFEdit
 	{
 		VTFImageFormat get()
 		{
-			return (VTFImageFormat)this->cboAlphaFormat->SelectedIndex;
+			return (VTFImageFormat)safe_cast<FmtItem^>(this->cboAlphaFormat->SelectedItem)->Value;
 		}
 		void set(VTFImageFormat ImageFormat)
 		{
-			int iIndex = Convert::ToInt32(ImageFormat);
-			if (iIndex >= 0 && iIndex < this->cboAlphaFormat->Items->Count)
+			for each (FmtItem ^ item in this->cboAlphaFormat->Items)
 			{
-				this->cboAlphaFormat->SelectedIndex = iIndex;
+				if (item->Value == (int)ImageFormat)
+				{
+					this->cboAlphaFormat->SelectedItem = item;
+					return;
+				}
 			}
 		}
 	}
@@ -1706,8 +1747,8 @@ namespace VTFEdit
 
 	private: System::Void btnReset_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		this->cboFormat->SelectedIndex = 13;
-		this->cboAlphaFormat->SelectedIndex = 15;
+		this->NormalFormat = IMAGE_FORMAT_DXT1;
+		this->AlphaFormat = IMAGE_FORMAT_DXT5;
 		this->cboTextureType->SelectedIndex = 0;
 
 		this->chkResize->Checked = true;

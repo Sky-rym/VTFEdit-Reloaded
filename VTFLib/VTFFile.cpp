@@ -973,6 +973,17 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 			return vlTrue;
 		}
 
+		// New vtf version support.
+		if(this->Header->ImageFormat == IMAGE_FORMAT_ATI_DST16)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI2N;
+		}
+
+		if(this->Header->ImageFormat == IMAGE_FORMAT_ATI_DST24)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI1N;
+		}
+ 
 		// work out how big out buffers need to be
 		this->uiImageBufferSize = this->ComputeImageSize(this->Header->Width, this->Header->Height, this->Header->Depth, this->Header->MipCount, this->Header->ImageFormat) * this->GetFaceCount() * this->GetFrameCount();
 
@@ -1058,7 +1069,7 @@ vlBool CVTFFile::Load(IO::Readers::IReader *Reader, vlBool bHeaderOnly)
 			uiThumbnailBufferOffset = this->Header->HeaderSize;
 			uiImageDataOffset = uiThumbnailBufferOffset + this->uiThumbnailBufferSize;
 		}
-		
+
 		// sanity check
 		// headersize + lowbuffersize + buffersize *should* equal the filesize
 		if(this->Header->HeaderSize > uiFileSize || uiThumbnailBufferOffset + this->uiThumbnailBufferSize > uiFileSize || uiImageDataOffset + this->uiImageBufferSize > uiFileSize)
@@ -1139,11 +1150,42 @@ vlBool CVTFFile::Save(IO::Writers::IWriter *Writer) const
 		if(!Writer->Open())
 			throw 0;
 
+		tagVTFImageFormat fmt = this->Header->ImageFormat;
+
+		// Old version VTF support.
+		if(fmt == IMAGE_FORMAT_ATI_DST16 && this->Header->Version[1] < VTF_MINOR_VERSION)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI2N;
+		}
+
+		if(fmt == IMAGE_FORMAT_ATI_DST24 && this->Header->Version[1] < VTF_MINOR_VERSION)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI1N;
+		}
+
+		bool ati = false;
+
+		// New version VTF support.
+		if(fmt == IMAGE_FORMAT_ATI2N && this->Header->Version[1] >= VTF_MINOR_VERSION)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI_DST16;
+			ati = true;
+		}
+
+		if(fmt == IMAGE_FORMAT_ATI1N && this->Header->Version[1] >= VTF_MINOR_VERSION)
+		{
+			this->Header->ImageFormat = IMAGE_FORMAT_ATI_DST24;
+			ati = true;
+		}
+
 		// Write the header.
 		if(Writer->Write(this->Header, this->Header->HeaderSize) != this->Header->HeaderSize)
 		{
 			throw 0;
 		}
+
+		// Back format (crash fix).
+		if(ati) this->Header->ImageFormat = fmt;
 
 		if(this->GetSupportsResources())
 		{
@@ -2602,8 +2644,8 @@ static SVTFImageFormatInfo VTFImageFormatInfo[] =
 	{ "ATI DST16",			 16,  2,  0,  0,  0,  0, vlFalse,  vlTrue },		// IMAGE_FORMAT_ATI_DST16
 	{ "ATI DST24",			 24,  3,  0,  0,  0,  0, vlFalse,  vlTrue },		// IMAGE_FORMAT_ATI_DST24
 	{ "nVidia NULL",		 32,  4,  0,  0,  0,  0, vlFalse,  vlTrue },		// IMAGE_FORMAT_NV_NULL
-	{ "ATI1N",				  4,  0,  0,  0,  0,  0,  vlTrue,  vlTrue },		// IMAGE_FORMAT_ATI1N
 	{ "ATI2N",				  8,  0,  0,  0,  0,  0,  vlTrue,  vlTrue },		// IMAGE_FORMAT_ATI2N
+	{ "ATI1N",				  4,  0,  0,  0,  0,  0,  vlTrue,  vlTrue },		// IMAGE_FORMAT_ATI1N
 	{ "HDR_BGRA8888",		 32,  4,  8,  8,  8,  8, vlFalse,  vlTrue }			// IMAGE_FORMAT_BGRA8888
 	/*
 	{ "Xbox360 DST16",		 16,  0,  0,  0,  0,  0, vlFalse,  vlTrue },		// IMAGE_FORMAT_X360_DST16
@@ -2644,6 +2686,7 @@ vlUInt CVTFFile::ComputeImageSize(vlUInt uiWidth, vlUInt uiHeight, vlUInt uiDept
 	{
 	case IMAGE_FORMAT_DXT1:
 	case IMAGE_FORMAT_DXT1_ONEBITALPHA:
+	case IMAGE_FORMAT_ATI1N:
 		if(uiWidth < 4 && uiWidth > 0)
 			uiWidth = 4;
 
@@ -2653,6 +2696,7 @@ vlUInt CVTFFile::ComputeImageSize(vlUInt uiWidth, vlUInt uiHeight, vlUInt uiDept
 		return ((uiWidth + 3) / 4) * ((uiHeight + 3) / 4) * 8 * uiDepth;
 	case IMAGE_FORMAT_DXT3:
 	case IMAGE_FORMAT_DXT5:
+	case IMAGE_FORMAT_ATI2N:
 		if(uiWidth < 4 && uiWidth > 0)
 			uiWidth = 4;
 
@@ -2792,7 +2836,7 @@ vlUInt CVTFFile::ComputeDataOffset(vlUInt uiFrame, vlUInt uiFace, vlUInt uiSlice
 	{
 		uiFrame = uiFrameCount - 1;
 	}
-	
+
 	if(uiFace >= uiFaceCount)
 	{
 		uiFace = uiFaceCount - 1;
@@ -2823,7 +2867,7 @@ vlUInt CVTFFile::ComputeDataOffset(vlUInt uiFrame, vlUInt uiFace, vlUInt uiSlice
 	uiOffset += uiTemp2 * uiSlice;
 
 	assert(uiOffset < this->uiImageBufferSize);
-	
+
 	return uiOffset;
 }
 
@@ -3110,8 +3154,8 @@ static SVTFImageConvertInfo VTFImageConvertInfo[] =
 	{	 16,  2, 16,  0,  0,  0,	 0,	-1,	-1,	-1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ATI_DST16},
 	{	 24,  3, 24,  0,  0,  0,	 0,	-1,	-1,	-1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ATI_DST24},
 	{	 32,  4,  0,  0,  0,  0,	-1,	-1,	-1,	-1, vlFalse, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_NV_NULL},
-	{	  4,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_ATI1N},
-	{     8,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlFalse,	NULL,	NULL,		IMAGE_FORMAT_ATI2N},
+	{     8,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ATI2N},
+	{	  4,  0,  0,  0,  0,  0,	-1, -1, -1, -1,  vlTrue, vlTrue,	NULL,	NULL,		IMAGE_FORMAT_ATI1N},
 	{ 	 32,  4,  8,  8,  8,  8,	 2,	 1,	 0,	 3, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_HDR_BGRA8888},/*,
 	{	 16,  2, 16,  0,  0,  0,	 0, -1, -1, -1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_X360_DST16},
 	{	 24,  3, 24,  0,  0,  0,	 0, -1, -1, -1, vlFalse,  vlTrue,	NULL,	NULL,		IMAGE_FORMAT_X360_DST24},
@@ -3442,6 +3486,8 @@ vlBool CVTFFile::Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUIn
 		case IMAGE_FORMAT_DXT1_ONEBITALPHA:
 		case IMAGE_FORMAT_DXT3:
 		case IMAGE_FORMAT_DXT5:
+		case IMAGE_FORMAT_ATI2N:
+		case IMAGE_FORMAT_ATI1N:
 			bResult = CVTFFile::DecompressDXTn(lpSource, lpSourceRGBA, uiWidth, uiHeight, SourceFormat);
 			break;
 		default:
@@ -3451,6 +3497,29 @@ vlBool CVTFFile::Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUIn
 
 		if(bResult)
 		{
+			// Make .z layer as white for ATI2N.
+			if(SourceFormat == IMAGE_FORMAT_ATI2N)
+			{
+				vlByte* pDest = lpSourceRGBA;
+				for(vlUInt i = 0; i < uiWidth * uiHeight; i++)
+				{
+					pDest[2] = 255;
+					pDest += 4;
+				}
+			}
+
+			// Make .yz layers as black for ATI1N.
+			if(SourceFormat == IMAGE_FORMAT_ATI1N)
+			{
+				vlByte* pDest = lpSourceRGBA;
+				for(vlUInt i = 0; i < uiWidth * uiHeight; i++)
+				{
+					pDest[1] = 0;
+					pDest[2] = 0;
+					pDest += 4;
+				}
+			}
+
 			// compress the source or convert it to the dest format if it is not compressed
 			switch(DestFormat)
 			{
@@ -3458,6 +3527,8 @@ vlBool CVTFFile::Convert(vlByte *lpSource, vlByte *lpDest, vlUInt uiWidth, vlUIn
 			case IMAGE_FORMAT_DXT1_ONEBITALPHA:
 			case IMAGE_FORMAT_DXT3:
 			case IMAGE_FORMAT_DXT5:
+			case IMAGE_FORMAT_ATI2N:
+			case IMAGE_FORMAT_ATI1N:
 				bResult = CVTFFile::CompressDXTn(lpSourceRGBA, lpDest, uiWidth, uiHeight, DestFormat, nAlphaThreshold);
 				break;
 			default:

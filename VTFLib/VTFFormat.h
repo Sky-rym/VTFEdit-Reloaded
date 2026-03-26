@@ -96,8 +96,8 @@ typedef enum tagVTFImageFormat
 	IMAGE_FORMAT_ATI_DST16,
 	IMAGE_FORMAT_ATI_DST24,
 	IMAGE_FORMAT_NV_NULL,
-	IMAGE_FORMAT_ATI1N,						
 	IMAGE_FORMAT_ATI2N,
+	IMAGE_FORMAT_ATI1N,						
 	IMAGE_FORMAT_HDR_BGRA8888,				//!<  = Blue, Green, Red, Alpha - 32 bpp (HDR encoding)
 	/*
 	XBox:
